@@ -1,0 +1,382 @@
+<html>
+<head>
+<title>ChessBoard.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+.s5 { color: #5f826b; font-style: italic;}
+.s6 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ChessBoard.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">ActionEvent</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">ActionListener</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Random</span><span class="s2">;</span>
+
+
+<span class="s0">public class </span><span class="s1">ChessBoard</span><span class="s2">{</span>
+    <span class="s0">private int </span><span class="s1">numOfRows</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">numOfColumns</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">numOficons</span><span class="s2">;</span>
+    <span class="s0">private boolean </span><span class="s1">applyGrav </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+    <span class="s0">private boolean </span><span class="s1">onCombo </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+    <span class="s0">private int</span><span class="s2">[][] </span><span class="s1">map</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">comboindex </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">combocnt </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">private final </span><span class="s1">Random random </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Random</span><span class="s2">();</span>
+    <span class="s0">int</span><span class="s2">[] </span><span class="s1">validY </span><span class="s2">= </span><span class="s0">new int</span><span class="s2">[</span><span class="s3">100</span><span class="s2">];</span>
+    <span class="s0">int</span><span class="s2">[] </span><span class="s1">validX </span><span class="s2">= </span><span class="s0">new int</span><span class="s2">[</span><span class="s3">100</span><span class="s2">];</span>
+    <span class="s0">int </span><span class="s1">hasConnectedCnt </span><span class="s2">= </span><span class="s3">50</span><span class="s2">;</span>
+    <span class="s0">public </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">currentPath </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+
+    <span class="s0">public </span><span class="s1">ChessBoard</span><span class="s2">(</span><span class="s0">int </span><span class="s1">r</span><span class="s2">, </span><span class="s0">int </span><span class="s1">c</span><span class="s2">, </span><span class="s0">int </span><span class="s1">noi</span><span class="s2">,</span><span class="s0">boolean </span><span class="s1">applyGrav</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">numOfRows </span><span class="s2">= </span><span class="s1">r</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">numOfColumns </span><span class="s2">= </span><span class="s1">c</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">numOficons </span><span class="s2">= </span><span class="s1">noi</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">map </span><span class="s2">= </span><span class="s0">new int</span><span class="s2">[</span><span class="s1">r</span><span class="s2">][</span><span class="s1">c</span><span class="s2">];</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">applyGrav </span><span class="s2">= </span><span class="s1">applyGrav</span><span class="s2">;</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">c</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">r</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+                <span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] = </span><span class="s3">0</span><span class="s2">;</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public int </span><span class="s1">getCombocnt</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">combocnt</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">applyGravity</span><span class="s2">() {</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s1">numOfRows </span><span class="s2">- </span><span class="s3">1</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&gt; </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i</span><span class="s2">--) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">numOfColumns</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] == </span><span class="s3">0 </span><span class="s2">&amp;&amp; </span><span class="s1">map</span><span class="s2">[</span><span class="s1">i </span><span class="s2">- </span><span class="s3">1</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] != </span><span class="s3">0</span><span class="s2">) {</span>
+                    <span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] = </span><span class="s1">map</span><span class="s2">[</span><span class="s1">i </span><span class="s2">- </span><span class="s3">1</span><span class="s2">][</span><span class="s1">j</span><span class="s2">];</span>
+                    <span class="s1">map</span><span class="s2">[</span><span class="s1">i </span><span class="s2">- </span><span class="s3">1</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] = </span><span class="s3">0</span><span class="s2">;</span>
+
+
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+
+        <span class="s2">}</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;重力场启用1次&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">validSpotsX</span><span class="s2">() {</span>
+        <span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Integer</span><span class="s2">&gt; </span><span class="s1">validSpotsX </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s0">int</span><span class="s2">[] </span><span class="s1">validX </span><span class="s2">= </span><span class="s0">new int</span><span class="s2">[</span><span class="s1">numOfRows </span><span class="s2">* </span><span class="s1">numOfColumns</span><span class="s2">];</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">numOfRows</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">numOfColumns</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] == </span><span class="s3">0</span><span class="s2">) {</span>
+                    <span class="s1">validSpotsX</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">validSpotsX</span><span class="s2">.</span><span class="s1">size</span><span class="s2">(); </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s1">validX</span><span class="s2">[</span><span class="s1">i</span><span class="s2">] = </span><span class="s1">validSpotsX</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">validX </span><span class="s2">= </span><span class="s1">validX</span><span class="s2">;</span>
+
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">validSpotsY</span><span class="s2">() {</span>
+        <span class="s0">int</span><span class="s2">[] </span><span class="s1">validY </span><span class="s2">= </span><span class="s0">new int</span><span class="s2">[</span><span class="s1">numOfRows </span><span class="s2">* </span><span class="s1">numOfColumns</span><span class="s2">];</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">validY </span><span class="s2">= </span><span class="s1">validY</span><span class="s2">;</span>
+        <span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Integer</span><span class="s2">&gt; </span><span class="s1">validSpotsY </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">numOfRows</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">numOfColumns</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] == </span><span class="s3">0</span><span class="s2">) {</span>
+                    <span class="s1">validSpotsY</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">j</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">validSpotsY</span><span class="s2">.</span><span class="s1">size</span><span class="s2">(); </span><span class="s1">i</span><span class="s2">++) {</span>
+
+            <span class="s1">validY</span><span class="s2">[</span><span class="s1">i</span><span class="s2">] = </span><span class="s1">validSpotsY</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+
+        <span class="s2">}</span>
+
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">gameSetting</span><span class="s2">() {</span>
+        <span class="s0">int </span><span class="s1">pairsPlaced </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">int </span><span class="s1">failAttemps </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">int </span><span class="s1">tolerance </span><span class="s2">= </span><span class="s3">1000</span><span class="s2">;</span>
+        <span class="s0">int </span><span class="s1">leastPairs </span><span class="s2">= </span><span class="s3">50</span><span class="s2">;</span>
+        <span class="s1">validSpotsX</span><span class="s2">();</span>
+        <span class="s1">validSpotsY</span><span class="s2">();</span>
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">pairsPlaced </span><span class="s2">&lt; </span><span class="s1">leastPairs </span><span class="s2">&amp;&amp; </span><span class="s1">failAttemps </span><span class="s2">&lt; </span><span class="s1">tolerance</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">validX</span><span class="s2">.</span><span class="s1">length </span><span class="s2">&lt; </span><span class="s3">2</span><span class="s2">) {</span>
+                <span class="s0">break</span><span class="s2">;</span>
+            <span class="s2">}</span>
+
+            <span class="s0">int </span><span class="s1">x1 </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">nextInt</span><span class="s2">(</span><span class="s1">validX</span><span class="s2">.</span><span class="s1">length</span><span class="s2">);</span>
+            <span class="s0">int </span><span class="s1">x2 </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">nextInt</span><span class="s2">(</span><span class="s1">validX</span><span class="s2">.</span><span class="s1">length</span><span class="s2">);</span>
+            <span class="s0">while </span><span class="s2">(</span><span class="s1">x1 </span><span class="s2">== </span><span class="s1">x2</span><span class="s2">) {</span>
+                <span class="s1">x2 </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">nextInt</span><span class="s2">(</span><span class="s1">validX</span><span class="s2">.</span><span class="s1">length</span><span class="s2">);</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">validX</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">]][</span><span class="s1">validY</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">]] == </span><span class="s3">0 </span><span class="s2">&amp;&amp; </span><span class="s1">map</span><span class="s2">[</span><span class="s1">validX</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">]][</span><span class="s1">validY</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">]] == </span><span class="s3">0</span><span class="s2">) {</span>
+
+                <span class="s0">try </span><span class="s2">{</span>
+                    <span class="s0">int </span><span class="s1">ic </span><span class="s2">= </span><span class="s1">random</span><span class="s2">.</span><span class="s1">nextInt</span><span class="s2">(</span><span class="s3">1</span><span class="s2">, </span><span class="s1">numOficons </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">);</span>
+                    <span class="s1">setCell</span><span class="s2">(</span><span class="s1">validX</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">], </span><span class="s1">validY</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">], </span><span class="s1">ic</span><span class="s2">);</span>
+                    <span class="s1">setCell</span><span class="s2">(</span><span class="s1">validX</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">], </span><span class="s1">validY</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">], </span><span class="s1">ic</span><span class="s2">);</span>
+                    <span class="s1">pairsPlaced</span><span class="s2">++;</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">printf</span><span class="s2">(</span><span class="s4">&quot;已将第%d,%d和%d,%d设置为%d,已设置%d对,当前失败次数总计%d</span><span class="s0">\n</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s1">validX</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">], </span><span class="s1">validY</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">], </span><span class="s1">validX</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">], </span><span class="s1">validY</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">], </span><span class="s1">ic</span><span class="s2">, </span><span class="s1">pairsPlaced</span><span class="s2">, </span><span class="s1">failAttemps</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+                    <span class="s1">failAttemps</span><span class="s2">++;</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;棋盘布置失败次数+1&quot;</span><span class="s2">);</span>
+                <span class="s2">}</span>
+
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public boolean </span><span class="s1">isValidConnection</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">x2</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y2</span><span class="s2">) {</span>
+
+        <span class="s0">if </span><span class="s2">((</span><span class="s1">x1 </span><span class="s2">== </span><span class="s1">x2 </span><span class="s2">&amp;&amp; </span><span class="s1">y1 </span><span class="s2">== </span><span class="s1">y2</span><span class="s2">) || </span><span class="s1">map</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">] != </span><span class="s1">map</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">][</span><span class="s1">y2</span><span class="s2">] || </span><span class="s1">map</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">] == </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s0">return false</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+
+        <span class="s0">return </span><span class="s1">canConnectLine</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">) || </span><span class="s1">canConnect1Fold</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">) || </span><span class="s1">canConnect2Fold</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+
+<span class="s5">/// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+    <span class="s6">//</span>
+    <span class="s0">private boolean </span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">x2</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y2</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">x1 </span><span class="s2">== </span><span class="s1">x2</span><span class="s2">) {</span>
+            <span class="s0">int </span><span class="s1">min </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">min</span><span class="s2">(</span><span class="s1">y1</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">);</span>
+            <span class="s0">int </span><span class="s1">max </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">max</span><span class="s2">(</span><span class="s1">y1</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">);</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s1">min </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">max</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">i</span><span class="s2">] != </span><span class="s3">0</span><span class="s2">) </span><span class="s0">return false</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s0">return true</span><span class="s2">;</span>
+        <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">y1 </span><span class="s2">== </span><span class="s1">y2</span><span class="s2">) {</span>
+            <span class="s0">int </span><span class="s1">min </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">min</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">);</span>
+            <span class="s0">int </span><span class="s1">max </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">max</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">);</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s1">min </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">max</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">] != </span><span class="s3">0</span><span class="s2">) </span><span class="s0">return false</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s0">return true</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">return false</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s6">// 0</span>
+
+
+    <span class="s0">public boolean </span><span class="s1">canConnectLine</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">x2</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y2</span><span class="s2">) {</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">x1 </span><span class="s2">!= </span><span class="s1">x2 </span><span class="s2">&amp;&amp; </span><span class="s1">y1 </span><span class="s2">!= </span><span class="s1">y2</span><span class="s2">) </span><span class="s0">return false</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)) {</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s6">// 清空旧数据</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">)); </span><span class="s6">// 起点</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)); </span><span class="s6">// 终点</span>
+            <span class="s0">return true</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">return false</span><span class="s2">;</span>
+
+
+    <span class="s2">}</span>
+    
+        <span class="s6">// 1</span>
+    <span class="s0">public boolean </span><span class="s1">canConnect1Fold</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">x2</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y2</span><span class="s2">) {</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y2</span><span class="s2">] == </span><span class="s3">0 </span><span class="s2">&amp;&amp; </span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">) &amp;&amp; </span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)) {</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">)); </span><span class="s6">// 起点</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)); </span><span class="s6">// 拐点</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">));</span>
+            <span class="s0">return true</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s6">// 检查拐角2 (x2, y1)</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">] == </span><span class="s3">0 </span><span class="s2">&amp;&amp; </span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">) &amp;&amp; </span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)) {</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">)); </span><span class="s6">// 起点</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">)); </span><span class="s6">// 拐点</span>
+            <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)); </span><span class="s6">// 终点</span>
+            <span class="s0">return true</span><span class="s2">;</span>
+
+        <span class="s2">}</span>
+
+        <span class="s0">return false</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s6">// 2</span>
+    <span class="s0">public boolean </span><span class="s1">canConnect2Fold</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">x2</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y2</span><span class="s2">) {</span>
+
+
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">numOfColumns</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">j </span><span class="s2">== </span><span class="s1">y1</span><span class="s2">) </span><span class="s0">continue</span><span class="s2">;</span>
+
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] == </span><span class="s3">0 </span><span class="s2">&amp;&amp; </span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x1</span><span class="s2">, </span><span class="s1">j</span><span class="s2">)) {</span>
+
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">canConnect1Fold</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">j</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)) {</span>
+                    <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">));</span>
+                    <span class="s0">return true</span><span class="s2">;</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+
+
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">numOfRows</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">i </span><span class="s2">== </span><span class="s1">x1</span><span class="s2">) </span><span class="s0">continue</span><span class="s2">;</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">] == </span><span class="s3">0 </span><span class="s2">&amp;&amp; </span><span class="s1">isPathClear</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">i</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">)) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">canConnect1Fold</span><span class="s2">(</span><span class="s1">i</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">)) {</span>
+                    <span class="s1">currentPath</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s0">new </span><span class="s1">Point</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">));</span>
+                    <span class="s0">return true</span><span class="s2">;</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+
+        <span class="s0">return false</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public boolean </span><span class="s1">isGameCleared</span><span class="s2">() {</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">hasConnectedCnt </span><span class="s2">== </span><span class="s3">0</span><span class="s2">){</span>
+            <span class="s0">return true</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">else</span><span class="s2">{</span>
+            <span class="s0">return false</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">controlPanelPrintln</span><span class="s2">(){</span>
+        <span class="s0">for</span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span><span class="s1">i</span><span class="s2">&lt;</span><span class="s1">numOfRows</span><span class="s2">;</span><span class="s1">i</span><span class="s2">++){</span>
+            <span class="s0">for</span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span><span class="s1">j</span><span class="s2">&lt;</span><span class="s1">numOfColumns</span><span class="s2">;</span><span class="s1">j</span><span class="s2">++){</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">]+</span><span class="s4">&quot; &quot;</span><span class="s2">);</span>
+            <span class="s2">}</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">();</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+    <a href="ScoreCounter.java.html">ScoreCounter</a> <span class="s1">cnt </span><span class="s2">= </span><span class="s0">new <a href="ScoreCounter.java.html">ScoreCounter</a></span><span class="s2">();</span>
+    <span class="s0">public boolean </span><span class="s1">cellElimination</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">x2</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y2</span><span class="s2">, </span><span class="s0">boolean </span><span class="s1">applyGrav</span><span class="s2">,<a href="BackgroundPanel.java.html">BackgroundPanel</a> </span><span class="s1">bgPanel</span><span class="s2">) {</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">isValidConnection</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">,</span><span class="s1">y1</span><span class="s2">,</span><span class="s1">x2</span><span class="s2">,</span><span class="s1">y2</span><span class="s2">)) {</span>
+
+            <span class="s0">int </span><span class="s1">currentIcon </span><span class="s2">= </span><span class="s1">map</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">];</span>
+            <span class="s1">map</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">] = </span><span class="s3">0</span><span class="s2">;</span>
+            <span class="s1">map</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">][</span><span class="s1">y2</span><span class="s2">] = </span><span class="s3">0</span><span class="s2">;</span>
+
+            <span class="s1">hasConnectedCnt</span><span class="s2">--;</span>
+            <span class="s5">/// ////////////////////</span>
+            <span class="s6">// 3. 【关键修复】Combo 计算逻辑</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">comboindex </span><span class="s2">== </span><span class="s3">0</span><span class="s2">) {</span>
+                <span class="s6">// 游戏第一次消除</span>
+                <span class="s1">comboindex </span><span class="s2">= </span><span class="s1">currentIcon</span><span class="s2">;</span>
+
+                <span class="s1">onCombo </span><span class="s2">= </span><span class="s0">true</span><span class="s2">;</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s6">// 判断是否和上一次消除的图案一样</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">currentIcon </span><span class="s2">== </span><span class="s1">comboindex</span><span class="s2">) {</span>
+                    <span class="s1">combocnt</span><span class="s2">++;</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;连击次数加1&quot;</span><span class="s2">);</span>
+                    <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">updateComboDisplay</span><span class="s2">(</span><span class="s1">combocnt</span><span class="s2">);</span>
+                    <span class="s1">onCombo </span><span class="s2">= </span><span class="s0">true</span><span class="s2">; </span><span class="s6">// 成功触发连击</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">comboindex </span><span class="s2">= </span><span class="s1">currentIcon</span><span class="s2">; </span><span class="s6">// 换图案了，记录新图案</span>
+                    <span class="s1">combocnt </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;             </span><span class="s6">// 连击中断</span>
+                    <span class="s1">onCombo </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+
+
+
+
+
+            <span class="s5">/// ////////////////</span>
+            <span class="s0">if</span><span class="s2">(</span><span class="s1">applyGrav</span><span class="s2">) {</span>
+                <span class="s1">cnt</span><span class="s2">.</span><span class="s1">addScore</span><span class="s2">(</span><span class="s3">120</span><span class="s2">);</span>
+                <span class="s1">applyGravity</span><span class="s2">();</span>
+                <span class="s0">if</span><span class="s2">(</span><span class="s1">onCombo</span><span class="s2">){</span>
+                    <span class="s1">cnt</span><span class="s2">.</span><span class="s1">addScore</span><span class="s2">(</span><span class="s3">80</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+            <span class="s0">if</span><span class="s2">(!</span><span class="s1">applyGrav</span><span class="s2">) {</span><span class="s1">cnt</span><span class="s2">.</span><span class="s1">addScore</span><span class="s2">(</span><span class="s3">100</span><span class="s2">);</span>
+                <span class="s0">if</span><span class="s2">(</span><span class="s1">onCombo</span><span class="s2">){</span>
+                    <span class="s1">cnt</span><span class="s2">.</span><span class="s1">addScore</span><span class="s2">(</span><span class="s3">50</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+
+            <span class="s0">return true</span><span class="s2">;</span>
+
+        <span class="s2">}</span>
+        <span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;无效连接&quot;</span><span class="s2">);</span>
+                <span class="s0">return false</span><span class="s2">;</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">setCell</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y1</span><span class="s2">, </span><span class="s0">int </span><span class="s1">x2</span><span class="s2">, </span><span class="s0">int </span><span class="s1">y2</span><span class="s2">){</span>
+        <span class="s0">for</span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span><span class="s1">i</span><span class="s2">&lt;</span><span class="s1">numOfRows</span><span class="s2">;</span><span class="s1">i</span><span class="s2">++){</span>
+
+            <span class="s0">for</span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span><span class="s1">j</span><span class="s2">&lt;</span><span class="s1">numOfColumns</span><span class="s2">;</span><span class="s1">j</span><span class="s2">++){</span>
+
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s6">//私有变量的setter</span>
+    <span class="s0">public void </span><span class="s1">setNumOfRows</span><span class="s2">(</span><span class="s0">int </span><span class="s1">numOfRows</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">numOfRows </span><span class="s2">= </span><span class="s1">numOfRows</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setNumOfColumns</span><span class="s2">(</span><span class="s0">int </span><span class="s1">numOfColumns</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">numOfColumns </span><span class="s2">= </span><span class="s1">numOfColumns</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setNumOficons</span><span class="s2">(</span><span class="s0">int </span><span class="s1">numOficons</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">numOficons </span><span class="s2">= </span><span class="s1">numOficons</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setMap</span><span class="s2">(</span><span class="s0">int</span><span class="s2">[][] </span><span class="s1">map</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">map </span><span class="s2">= </span><span class="s1">map</span><span class="s2">;</span>
+
+        <span class="s0">int </span><span class="s1">remainingPairs </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">map</span><span class="s2">.</span><span class="s1">length</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">map</span><span class="s2">[</span><span class="s3">0</span><span class="s2">].</span><span class="s1">length</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+                <span class="s0">if</span><span class="s2">(</span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] != </span><span class="s3">0</span><span class="s2">){</span>
+                    <span class="s1">remainingPairs</span><span class="s2">++;</span>
+                <span class="s2">}</span>
+            <span class="s2">}           </span>
+        <span class="s2">}</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">hasConnectedCnt </span><span class="s2">= </span><span class="s1">remainingPairs</span><span class="s2">/</span><span class="s3">2</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setCell</span><span class="s2">(</span><span class="s0">int </span><span class="s1">x</span><span class="s2">,</span><span class="s0">int </span><span class="s1">y</span><span class="s2">,</span><span class="s0">int </span><span class="s1">ic</span><span class="s2">){</span>
+        <span class="s1">map</span><span class="s2">[</span><span class="s1">x</span><span class="s2">][</span><span class="s1">y</span><span class="s2">] = </span><span class="s1">ic</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s6">//私有变量的getters~</span>
+    <span class="s0">public int </span><span class="s1">getNumOfrows</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">numOfRows</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public int </span><span class="s1">getNumOfcolumns</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">numOfColumns</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public int</span><span class="s2">[][] </span><span class="s1">getMap</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">map</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+<span class="s2">}</span>
+
+</pre>
+</body>
+</html>

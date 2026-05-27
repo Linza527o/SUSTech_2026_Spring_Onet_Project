@@ -1,0 +1,177 @@
+<html>
+<head>
+<title>LoginFrame.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+LoginFrame.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">SoundManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.*;</span>
+
+<span class="s0">public class </span><span class="s1">LoginFrame </span><span class="s0">extends </span><span class="s1">JFrame </span><span class="s2">{</span>
+    
+    <span class="s0">public </span><span class="s1">LoginFrame</span><span class="s2">() {</span>
+        <span class="s3">// 1. 基础设置：600x500，无边框，居中</span>
+        <span class="s1">setSize</span><span class="s2">(</span><span class="s4">600</span><span class="s2">, </span><span class="s4">500</span><span class="s2">);</span>
+        <span class="s1">setUndecorated</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span><span class="s3">// 去掉默认的系统边框（为了像素风纯粹性）</span>
+        <span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span><span class="s3">// 窗口在屏幕居中</span>
+        <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span><span class="s3">// 绝对布局，方便我们根据像素坐标精确摆放控件</span>
+        <span class="s1">getContentPane</span><span class="s2">().</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s4">40</span><span class="s2">, </span><span class="s4">40</span><span class="s2">, </span><span class="s4">40</span><span class="s2">)); </span><span class="s3">// 临时给个深灰背景，等你画好图换掉</span>
+
+        <span class="s3">// 3. 初始化并添加各种控件</span>
+        <span class="s1">initComponents</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">initComponents</span><span class="s2">() {</span>
+        <span class="s3">// === 标题 ===</span>
+        <span class="s1">JLabel titleLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s5">&quot;连 连 看&quot;</span><span class="s2">);</span>
+        <span class="s1">titleLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontTitle</span><span class="s2">);</span>
+        <span class="s1">titleLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">titleLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">230</span><span class="s2">, </span><span class="s4">50</span><span class="s2">, </span><span class="s4">200</span><span class="s2">, </span><span class="s4">50</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">titleLabel</span><span class="s2">);</span>
+
+        <span class="s3">// === 账号部分 ===</span>
+        <span class="s1">JLabel userLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s5">&quot;账号：&quot;</span><span class="s2">);</span>
+        <span class="s1">userLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">userLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">userLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">100</span><span class="s2">, </span><span class="s4">150</span><span class="s2">, </span><span class="s4">100</span><span class="s2">, </span><span class="s4">40</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">userLabel</span><span class="s2">);</span>
+
+        <span class="s1">JTextField userField </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JTextField</span><span class="s2">();</span>
+        <span class="s1">userField</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+        <span class="s1">userField</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">180</span><span class="s2">, </span><span class="s4">150</span><span class="s2">, </span><span class="s4">250</span><span class="s2">, </span><span class="s4">40</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">userField</span><span class="s2">);</span>
+
+        <span class="s3">// === 密码部分 ===</span>
+        <span class="s1">JLabel pwdLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s5">&quot;密码：&quot;</span><span class="s2">);</span>
+        <span class="s1">pwdLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">pwdLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">pwdLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">100</span><span class="s2">, </span><span class="s4">220</span><span class="s2">, </span><span class="s4">100</span><span class="s2">, </span><span class="s4">40</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">pwdLabel</span><span class="s2">);</span>
+
+        <span class="s1">JPasswordField pwdField </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPasswordField</span><span class="s2">(); </span><span class="s3">// 密码框，自动把输入变成小黑点</span>
+        <span class="s1">pwdField</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+        <span class="s1">pwdField</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">180</span><span class="s2">, </span><span class="s4">220</span><span class="s2">, </span><span class="s4">250</span><span class="s2">, </span><span class="s4">40</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">pwdField</span><span class="s2">);</span>
+
+        <span class="s3">// === 错误提示 Label (平常隐藏) ===</span>
+        <span class="s1">JLabel errorLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s5">&quot;账号或密码不能为空！&quot;</span><span class="s2">);</span>
+        <span class="s1">errorLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+        <span class="s1">errorLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">errorLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">180</span><span class="s2">, </span><span class="s4">270</span><span class="s2">, </span><span class="s4">300</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">errorLabel</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s3">// 默认隐藏</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">errorLabel</span><span class="s2">);</span>
+
+        <span class="s3">// === 登录按钮 ===</span>
+        <span class="s1">JButton loginBtn </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;登录&quot;</span><span class="s2">);</span>
+        <span class="s1">loginBtn</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">loginBtn</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">245</span><span class="s2">, </span><span class="s4">320</span><span class="s2">, </span><span class="s4">110</span><span class="s2">, </span><span class="s4">45</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">loginBtn</span><span class="s2">);</span>
+
+        <span class="s3">// === 自定义红叉关闭按钮 ===</span>
+        <span class="s1">JButton closeBtn </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">();</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">closeBtn</span><span class="s2">);</span>
+
+        <span class="s1">ImageIcon closeIcon </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_close1.png&quot;</span><span class="s2">); </span>
+        <span class="s1">closeBtn</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s1">closeIcon</span><span class="s2">);</span>
+
+        <span class="s1">closeBtn</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">closeBtn</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">closeBtn</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s3">// 去掉点击后的虚线框</span>
+        <span class="s1">closeBtn</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">550</span><span class="s2">, </span><span class="s4">10</span><span class="s2">, </span><span class="s1">closeIcon</span><span class="s2">.</span><span class="s1">getIconWidth</span><span class="s2">(), </span><span class="s1">closeIcon</span><span class="s2">.</span><span class="s1">getIconHeight</span><span class="s2">());</span>
+
+        <span class="s3">// ============================</span>
+        <span class="s3">// 4. 交互逻辑 (事件监听器)</span>
+        <span class="s3">// ============================</span>
+
+        <span class="s3">// 保存一下最开始的小黑点是什么符号，方便后面恢复</span>
+        <span class="s0">char </span><span class="s1">defaultChar </span><span class="s2">= </span><span class="s1">pwdField</span><span class="s2">.</span><span class="s1">getEchoChar</span><span class="s2">();</span>
+
+        <span class="s1">pwdField</span><span class="s2">.</span><span class="s1">addFocusListener</span><span class="s2">(</span><span class="s0">new </span><span class="s1">FocusAdapter</span><span class="s2">() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">focusGained</span><span class="s2">(</span><span class="s1">FocusEvent e</span><span class="s2">) {</span>
+                <span class="s1">String currentText </span><span class="s2">= </span><span class="s0">new </span><span class="s1">String</span><span class="s2">(</span><span class="s1">pwdField</span><span class="s2">.</span><span class="s1">getPassword</span><span class="s2">());</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">currentText</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s5">&quot;密码不能为空！&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">pwdField</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);             </span><span class="s3">// 清空错误提示文本</span>
+                    <span class="s1">pwdField</span><span class="s2">.</span><span class="s1">setEchoChar</span><span class="s2">(</span><span class="s1">defaultChar</span><span class="s2">); </span><span class="s3">// 恢复原来的小黑点遮罩</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+        <span class="s1">userField</span><span class="s2">.</span><span class="s1">addFocusListener</span><span class="s2">(</span><span class="s0">new </span><span class="s1">FocusAdapter</span><span class="s2">() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">focusGained</span><span class="s2">(</span><span class="s1">FocusEvent e</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">userField</span><span class="s2">.</span><span class="s1">getText</span><span class="s2">().</span><span class="s1">equals</span><span class="s2">(</span><span class="s5">&quot;账号不能为空！&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">userField</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">); </span><span class="s3">// 清空错误提示文本</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">// 登录按钮点击事件</span>
+        <span class="s1">loginBtn</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;mouse&quot;</span><span class="s2">);</span>
+            <span class="s1">String account </span><span class="s2">= </span><span class="s1">userField</span><span class="s2">.</span><span class="s1">getText</span><span class="s2">();</span>
+            <span class="s1">String password </span><span class="s2">= </span><span class="s0">new </span><span class="s1">String</span><span class="s2">(</span><span class="s1">pwdField</span><span class="s2">.</span><span class="s1">getPassword</span><span class="s2">());</span>
+            <span class="s0">boolean </span><span class="s1">success </span><span class="s2">= </span><span class="s0">true</span><span class="s2">;</span>
+
+            <span class="s3">// 判空</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">account</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">() || </span><span class="s1">account</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s5">&quot;账号不能为空！&quot;</span><span class="s2">)) {</span>
+                <span class="s1">userField</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;账号不能为空！&quot;</span><span class="s2">);</span>
+                <span class="s1">success </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">password</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">() || </span><span class="s1">password</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s5">&quot;密码不能为空！&quot;</span><span class="s2">)) {</span>
+                <span class="s1">pwdField</span><span class="s2">.</span><span class="s1">setEchoChar</span><span class="s2">(</span><span class="s5">'</span><span class="s0">\0</span><span class="s5">'</span><span class="s2">);</span>
+                <span class="s1">pwdField</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;密码不能为空！&quot;</span><span class="s2">);</span>
+                <span class="s1">success </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(!</span><span class="s1">success</span><span class="s2">) {</span>
+                <span class="s0">return</span><span class="s2">; </span><span class="s3">// 如果有输入错误，直接返回，不继续验证账号密码了</span>
+            <span class="s2">}</span>
+
+            <span class="s3">// 读AccountManager比对信息，验证账号密码是否正确</span>
+            <span class="s1">manager</span><span class="s2">.</span><span class="s1">AccountInfo currentUser </span><span class="s2">= </span><span class="s1">manager</span><span class="s2">.</span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">login</span><span class="s2">(</span><span class="s1">account</span><span class="s2">, </span><span class="s1">password</span><span class="s2">);</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentUser </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s3">// 验证成功，进入游戏界面</span>
+                <span class="s0">new <a href="InitialFrame.java.html">InitialFrame</a></span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">).</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s0">this</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">(); </span><span class="s3">// 关闭登录界面</span>
+                <span class="s3">//关闭StartFrame界面</span>
+                <span class="s0">for </span><span class="s2">(</span><span class="s1">Frame frame </span><span class="s2">: </span><span class="s1">Frame</span><span class="s2">.</span><span class="s1">getFrames</span><span class="s2">()) {</span>
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">frame </span><span class="s0">instanceof <a href="StartFrame.java.html">StartFrame</a></span><span class="s2">) {</span>
+                        <span class="s1">frame</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">();</span>
+                    <span class="s2">}</span>
+                <span class="s2">}</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s3">// 验证失败，显示错误提示</span>
+                <span class="s1">errorLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;账号或密码错误！&quot;</span><span class="s2">);</span>
+                <span class="s1">errorLabel</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s0">return</span><span class="s2">;</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">// 关闭按钮逻辑</span>
+        <span class="s1">closeBtn</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e1 -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;mouse&quot;</span><span class="s2">);</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">();</span>
+        <span class="s2">});</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

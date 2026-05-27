@@ -1,0 +1,388 @@
+<html>
+<head>
+<title>GameFrame.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+.s6 { color: #5f826b; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GameFrame.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+
+<span class="s0">import </span><span class="s1">manager</span><span class="s2">.</span><span class="s1">GameSaveManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">SoundManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">TransitionManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">ActionListener</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">IOException</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">concurrent</span><span class="s2">.</span><span class="s1">atomic</span><span class="s2">.</span><span class="s1">AtomicBoolean</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">GameFrame </span><span class="s0">extends </span><span class="s1">JFrame </span><span class="s2">{</span>
+    <span class="s0">private </span><span class="s1">manager</span><span class="s2">.</span><span class="s1">AccountInfo currentUser</span><span class="s2">;</span>
+    <span class="s0">private <a href="TimerPanel.java.html">TimerPanel</a> </span><span class="s1">timer</span><span class="s2">;</span>
+    <span class="s0">public int </span><span class="s1">mode</span><span class="s2">;</span>
+    <span class="s0">public int </span><span class="s1">totalScore </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">public int </span><span class="s1">currentScoreOverall </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">public boolean </span><span class="s1">applyGravity</span><span class="s2">;</span>
+
+    <span class="s0">public int </span><span class="s1">type</span><span class="s2">;</span>
+    <span class="s0">public void </span><span class="s1">setApplyGravity</span><span class="s2">(</span><span class="s0">boolean </span><span class="s1">b</span><span class="s2">){</span>
+        <span class="s1">applyGravity </span><span class="s2">= </span><span class="s1">b</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <a href="Cell.java.html">Cell</a> <span class="s1">cells </span><span class="s2">= </span><span class="s0">new <a href="Cell.java.html">Cell</a></span><span class="s2">(</span><span class="s3">320</span><span class="s2">, </span><span class="s3">40</span><span class="s2">, </span><span class="s3">64</span><span class="s2">);</span>
+    <span class="s0">public </span><span class="s1">GameFrame</span><span class="s2">(</span><span class="s1">manager</span><span class="s2">.</span><span class="s1">AccountInfo currentUser</span><span class="s2">,</span><span class="s0">boolean </span><span class="s1">playAnimation</span><span class="s2">,</span><span class="s0">boolean </span><span class="s1">applyGravity</span><span class="s2">, </span><span class="s0">int </span><span class="s1">mode</span><span class="s2">) {</span>
+
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">currentUser </span><span class="s2">= </span><span class="s1">currentUser</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">applyGravity </span><span class="s2">= </span><span class="s1">applyGravity</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">mode </span><span class="s2">= </span><span class="s1">mode</span><span class="s2">;</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">applyGravity</span><span class="s2">){</span>
+            <span class="s1">type </span><span class="s2">= </span><span class="s3">1</span><span class="s2">;</span>
+        <span class="s2">}</span><span class="s0">else</span><span class="s2">{</span><span class="s1">type </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;}</span>
+        
+
+        <span class="s1">setSize</span><span class="s2">(</span><span class="s3">1280</span><span class="s2">, </span><span class="s3">720</span><span class="s2">);</span>
+        <span class="s1">setUndecorated</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span><span class="s4">// 去掉默认的系统边框（为了像素风纯粹性）</span>
+        <span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span><span class="s4">// 窗口在屏幕居中</span>
+
+        
+        <a href="GameEntrancePanel.java.html">GameEntrancePanel</a> <span class="s1">entrancePanel </span><span class="s2">= </span><span class="s0">new <a href="GameEntrancePanel.java.html">GameEntrancePanel</a></span><span class="s2">(</span><span class="s5">&quot;game_start/&quot;</span><span class="s2">, </span><span class="s3">19</span><span class="s2">, </span><span class="s3">80</span><span class="s2">);</span>
+        <span class="s1">entrancePanel</span><span class="s2">.</span><span class="s1">applySFX</span><span class="s2">(</span><span class="s3">2</span><span class="s2">, </span><span class="s5">&quot;ascend&quot;</span><span class="s2">);</span>
+         <span class="s4">// 1. 必须手动设置大小，铺满全屏</span>
+        <span class="s1">entrancePanel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">1280</span><span class="s2">, </span><span class="s3">720</span><span class="s2">); </span>
+        
+        <span class="s4">// 2. 把它加到 LayeredPane 的 MODAL_LAYER (模态层)，这层在所有的按钮和棋盘之上！</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">getLayeredPane</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">entrancePanel</span><span class="s2">, </span><span class="s1">JLayeredPane</span><span class="s2">.</span><span class="s1">MODAL_LAYER</span><span class="s2">);</span>
+        
+        <span class="s1">entrancePanel</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span><span class="s4">// 最后才显示窗口，确保一打开就能看到开场动画</span>
+        
+        <a href="BackgroundPanel.java.html">BackgroundPanel</a> <span class="s1">bgPanel </span><span class="s2">= </span><span class="s0">new <a href="BackgroundPanel.java.html">BackgroundPanel</a></span><span class="s2">(</span><span class="s5">&quot;resource/images/game_panel.png&quot;</span><span class="s2">, </span><span class="s1">cells</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">1000</span><span class="s2">, </span><span class="s3">800</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setContentPane</span><span class="s2">(</span><span class="s1">bgPanel</span><span class="s2">); </span><span class="s4">// 把背景设置为内容面板</span>
+        <span class="s1">initComponents</span><span class="s2">(</span><span class="s1">bgPanel</span><span class="s2">);</span>
+
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">playAnimation</span><span class="s2">) {</span>
+            <span class="s4">// 如果是从大地图第一次进来，看完整动画</span>
+            <span class="s1">entrancePanel</span><span class="s2">.</span><span class="s1">playSequence</span><span class="s2">(() </span><span class="s1">-&gt; </span><span class="s2">{</span>
+                <span class="s1">entrancePanel</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span>
+                <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playBGM</span><span class="s2">(</span><span class="s5">&quot;resource/music/gaming_bgm.wav&quot;</span><span class="s2">); </span>
+
+                <span class="s1">timer</span><span class="s2">.</span><span class="s1">startTimer</span><span class="s2">();</span>
+            <span class="s2">});</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s4">// 如果是重新开始或继续游戏，直接 321 倒计时</span>
+            <span class="s1">entrancePanel</span><span class="s2">.</span><span class="s1">playCountdownOnly</span><span class="s2">(() </span><span class="s1">-&gt; </span><span class="s2">{</span>
+                <span class="s1">entrancePanel</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span>
+                <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playBGM</span><span class="s2">(</span><span class="s5">&quot;resource/music/gaming_bgm.wav&quot;</span><span class="s2">); </span>
+
+                <span class="s1">timer</span><span class="s2">.</span><span class="s1">startTimer</span><span class="s2">();</span>
+            <span class="s2">});</span>
+        <span class="s2">}</span>
+        
+        <span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+
+
+    <span class="s0">public void </span><span class="s1">initComponents</span><span class="s2">(<a href="BackgroundPanel.java.html">BackgroundPanel</a> </span><span class="s1">bgPanel</span><span class="s2">) {</span>
+        <a href="ChessBoard.java.html">ChessBoard</a> <span class="s1">mainBoard </span><span class="s2">= </span><span class="s0">new <a href="ChessBoard.java.html">ChessBoard</a></span><span class="s2">(</span><span class="s3">10</span><span class="s2">, </span><span class="s3">10</span><span class="s2">, </span><span class="s1">mode </span><span class="s2">== </span><span class="s3">0 </span><span class="s2">? </span><span class="s3">5 </span><span class="s2">: </span><span class="s3">10</span><span class="s2">, </span><span class="s1">applyGravity</span><span class="s2">);</span>
+        <span class="s1">GameSaveManager gameSaveManager </span><span class="s2">= </span><span class="s0">new </span><span class="s1">GameSaveManager</span><span class="s2">();</span>
+
+
+        <span class="s4">//添加左边LeaderboardPanel信息</span>
+        <a href="LeaderboardPanel.java.html">LeaderboardPanel</a> <span class="s1">leaderboardPanel </span><span class="s2">= </span><span class="s0">new <a href="LeaderboardPanel.java.html">LeaderboardPanel</a></span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">, </span><span class="s1">type</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">leaderboardPanel</span><span class="s2">);</span>
+
+        <span class="s1">JLabel leaderboardTitle </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s5">&quot;排 行 榜&quot;</span><span class="s2">);</span>
+        <span class="s1">leaderboardTitle</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">leaderboardTitle</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">230</span><span class="s2">, </span><span class="s3">195</span><span class="s2">, </span><span class="s3">215</span><span class="s2">));</span>
+        <span class="s1">leaderboardTitle</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">92</span><span class="s2">, </span><span class="s3">44</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">30</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">leaderboardTitle</span><span class="s2">);</span>
+
+
+        <span class="s4">//右上方关卡数显示</span>
+        <span class="s4">// ==========================================</span>
+        <span class="s0">int </span><span class="s1">level </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">applyGravity</span><span class="s2">) {</span>
+            <span class="s1">level </span><span class="s2">= </span><span class="s1">currentUser</span><span class="s2">.</span><span class="s1">getClearedLevels</span><span class="s2">(</span><span class="s3">0</span><span class="s2">,</span><span class="s1">mode</span><span class="s2">) + </span><span class="s3">1</span><span class="s2">;</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s1">level </span><span class="s2">= </span><span class="s1">currentUser</span><span class="s2">.</span><span class="s1">getClearedLevels</span><span class="s2">(</span><span class="s3">1</span><span class="s2">,</span><span class="s1">mode</span><span class="s2">) + </span><span class="s3">1</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">JLabel levelDisplayLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s5">&quot;第 &quot; </span><span class="s2">+ </span><span class="s1">level </span><span class="s2">+ </span><span class="s5">&quot; 关&quot;</span><span class="s2">);</span>
+        <span class="s1">levelDisplayLabel</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/levels_bg.png&quot;</span><span class="s2">));</span>
+        <span class="s1">levelDisplayLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">levelDisplayLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">255</span><span class="s2">, </span><span class="s3">230</span><span class="s2">, </span><span class="s3">180</span><span class="s2">)); </span><span class="s4">// 浅金色</span>
+
+        <span class="s1">levelDisplayLabel</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JLabel</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">levelDisplayLabel</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JLabel</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s1">levelDisplayLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">40</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">levelDisplayLabel</span><span class="s2">);</span>
+        <span class="s6">/// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+
+<span class="s6">//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+        <span class="s1">timer </span><span class="s2">= </span><span class="s0">new <a href="TimerPanel.java.html">TimerPanel</a></span><span class="s2">(</span><span class="s5">&quot;/resource/images/btn_bg.png&quot;</span><span class="s2">);</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">timer</span><span class="s2">.</span><span class="s1">getTimeButton</span><span class="s2">());</span>
+        <span class="s6">//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+        <span class="s1">JButton saveButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;保存进度&quot;</span><span class="s2">);</span>
+
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">));</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">380</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">saveButton</span><span class="s2">);</span>
+
+
+        <span class="s1">saveButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+
+            <span class="s0">int</span><span class="s2">[][] </span><span class="s1">currentMap </span><span class="s2">= </span><span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">getMap</span><span class="s2">();</span>
+            <span class="s0">int </span><span class="s1">currentScore </span><span class="s2">= </span><span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">cnt</span><span class="s2">.</span><span class="s1">getScore</span><span class="s2">();</span>
+
+            <span class="s0">int </span><span class="s1">currentTime </span><span class="s2">= </span><span class="s1">timer</span><span class="s2">.</span><span class="s1">getSecondsPassed</span><span class="s2">();</span>
+
+
+            <span class="s0">try </span><span class="s2">{</span>
+                <span class="s1">GameSaveManager</span><span class="s2">.</span><span class="s1">saveGame</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">.</span><span class="s1">getAccount</span><span class="s2">(), </span><span class="s1">currentMap</span><span class="s2">, </span><span class="s1">currentScore</span><span class="s2">, </span><span class="s1">currentTime</span><span class="s2">, </span><span class="s1">applyGravity</span><span class="s2">, </span><span class="s1">type</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">);</span>
+                <a href="PixelDialog.java.html">PixelDialog</a> <span class="s1">pixelDialog </span><span class="s2">= </span><span class="s0">new <a href="PixelDialog.java.html">PixelDialog</a></span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s5">&quot;进度已保存！&quot;</span><span class="s2">);</span>
+                <span class="s1">pixelDialog</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+            <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException ex</span><span class="s2">) {</span>
+                <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s1">ex</span><span class="s2">);</span>
+            <span class="s2">}</span>
+
+        <span class="s2">});</span>
+
+
+<span class="s6">//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+
+
+<span class="s6">/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////主要游戏界面</span>
+        
+
+        <span class="s1">JButton backButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;返回地图&quot;</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">));</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">530</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">backButton</span><span class="s2">);</span>
+
+        <span class="s1">JButton restartButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;重新开始&quot;</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">));</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">460</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">restartButton</span><span class="s2">);</span>
+
+        <span class="s1">JButton settingsButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;设置&quot;</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">));</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">600</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">settingsButton</span><span class="s2">);</span>
+        <span class="s6">///  ///////////////////////////////////////////////////////////////////</span>
+
+
+        <span class="s6">/// ////////////////////////////////////////////////////////////////////////////////////////////</span>
+        <span class="s1">AtomicBoolean pass </span><span class="s2">= </span><span class="s0">new </span><span class="s1">AtomicBoolean</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">ActionListener onVictory </span><span class="s2">= </span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s0">int </span><span class="s1">scoreThisGame </span><span class="s2">= </span><span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">cnt</span><span class="s2">.</span><span class="s1">getScore</span><span class="s2">();</span>
+            <span class="s0">int </span><span class="s1">timeThisGame </span><span class="s2">= </span><span class="s1">timer</span><span class="s2">.</span><span class="s1">getSecondsPassed</span><span class="s2">();</span>
+
+
+            <span class="s1">timer</span><span class="s2">.</span><span class="s1">stopTimer</span><span class="s2">();</span>
+            <span class="s1">manager</span><span class="s2">.</span><span class="s1">UserDataManager</span><span class="s2">.</span><span class="s1">saveProgress</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">, </span><span class="s1">scoreThisGame</span><span class="s2">, </span><span class="s1">timeThisGame</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">, </span><span class="s1">type</span><span class="s2">);</span>
+
+            <span class="s1">gameSaveManager</span><span class="s2">.</span><span class="s1">deleteSave</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">.</span><span class="s1">getAccount</span><span class="s2">(),</span><span class="s1">type</span><span class="s2">,</span><span class="s1">mode</span><span class="s2">);</span>
+
+
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;GameFrame 收到胜利信号&lt;(￣ c￣)y▂ξhahaxixihuhu111&quot;</span><span class="s2">);</span>
+            <span class="s1">pass</span><span class="s2">.</span><span class="s1">set</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+            <span class="s1">JPanel dimPane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">() {</span>
+                <span class="s1">@Override</span>
+                <span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+                    <span class="s4">// 这里才是真正实现“半透明黑色”的地方</span>
+                    <span class="s1">g</span><span class="s2">.</span><span class="s1">setColor</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">150</span><span class="s2">));</span>
+                    <span class="s1">g</span><span class="s2">.</span><span class="s1">fillRect</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">getWidth</span><span class="s2">(), </span><span class="s1">getHeight</span><span class="s2">());</span>
+                    <span class="s0">super</span><span class="s2">.</span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">};</span>
+            <span class="s1">dimPane</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+            <span class="s4">// 2. 利用 GlassPane (玻璃层) 把它铺在最顶层</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">setGlassPane</span><span class="s2">(</span><span class="s1">dimPane</span><span class="s2">);</span>
+            <span class="s1">dimPane</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+            <span class="s1">totalScore </span><span class="s2">= </span><span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">cnt</span><span class="s2">.</span><span class="s1">getScore</span><span class="s2">();</span>
+            <span class="s4">//先停止背景bgm，再播放胜利音乐</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">fadeOutBGM</span><span class="s2">(</span><span class="s3">0</span><span class="s2">); </span><span class="s4">// 渐隐当前BGM</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;victory&quot;</span><span class="s2">);</span>
+
+            <a href="VictoryDialog.java.html">VictoryDialog</a> <span class="s1">dialog </span><span class="s2">= </span><span class="s0">new <a href="VictoryDialog.java.html">VictoryDialog</a></span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">currentUser</span><span class="s2">, </span><span class="s1">cells</span><span class="s2">, </span><span class="s1">scoreThisGame</span><span class="s2">,</span><span class="s1">applyGravity</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">);</span>
+            <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+
+            <span class="s1">dimPane</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">getGlassPane</span><span class="s2">().</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">setGlassPane</span><span class="s2">(</span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">());</span>
+
+        <span class="s2">};</span>
+
+
+        <span class="s6">/////////////////////////////////////////////////////////////////////////////////////////////</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">gameSaveManager</span><span class="s2">.</span><span class="s1">loadGame</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">.</span><span class="s1">getAccount</span><span class="s2">(), </span><span class="s1">type</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">) != </span><span class="s0">null </span><span class="s2">&amp;&amp; !</span><span class="s1">pass</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()) {</span>
+            <span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">setMap</span><span class="s2">(</span><span class="s1">gameSaveManager</span><span class="s2">.</span><span class="s1">loadGame</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">.</span><span class="s1">getAccount</span><span class="s2">(), </span><span class="s1">type</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">).</span><span class="s1">map</span><span class="s2">);</span>
+            <span class="s1">currentScoreOverall </span><span class="s2">= </span><span class="s1">gameSaveManager</span><span class="s2">.</span><span class="s1">loadGame</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">.</span><span class="s1">getAccount</span><span class="s2">(), </span><span class="s1">type</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">).</span><span class="s1">score</span><span class="s2">;</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">gameSetting</span><span class="s2">();</span>
+        <span class="s2">}</span>
+
+            <span class="s1">JButton</span><span class="s2">[][] </span><span class="s1">buttonGrid </span><span class="s2">= </span><span class="s1">cells</span><span class="s2">.</span><span class="s1">cellArrays</span><span class="s2">(</span><span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">getMap</span><span class="s2">());</span>
+            <span class="s1">cells</span><span class="s2">.</span><span class="s1">setCellsFunction</span><span class="s2">(</span><span class="s1">buttonGrid</span><span class="s2">, </span><span class="s1">mainBoard</span><span class="s2">, </span><span class="s1">bgPanel</span><span class="s2">, </span><span class="s1">onVictory</span><span class="s2">, </span><span class="s1">applyGravity</span><span class="s2">);</span>
+<span class="s4">//            int combocnt = mainBoard.getCombocnt();</span>
+
+            <span class="s6">/// //////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+
+            <span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">cnt</span><span class="s2">.</span><span class="s1">setScore</span><span class="s2">(</span><span class="s1">currentScoreOverall</span><span class="s2">);</span>
+            <span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">cnt</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">300</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+            <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">mainBoard</span><span class="s2">.</span><span class="s1">cnt</span><span class="s2">);</span>
+
+
+            <span class="s4">//返回菜单</span>
+            
+            <span class="s4">//该按钮仅作为测试胜利界面正确弹出用，写好游戏底层玩法代码后删除</span>
+<span class="s4">//        JButton victoryButton = new JButton(&quot;测试&quot;);</span>
+<span class="s4">//        victoryButton.setFont(FontManager.pixelFontBody);</span>
+<span class="s4">//        victoryButton.setForeground(Color.WHITE);</span>
+<span class="s4">//        victoryButton.setIcon(new ImageIcon(&quot;resource/images/btn_bg.png&quot;));</span>
+<span class="s4">//        victoryButton.setHorizontalTextPosition(JButton.CENTER);</span>
+<span class="s4">//        victoryButton.setVerticalTextPosition(JButton.CENTER);</span>
+<span class="s4">//        victoryButton.setContentAreaFilled(false);</span>
+<span class="s4">//        victoryButton.setBorderPainted(false);</span>
+<span class="s4">//        victoryButton.setFocusPainted(false);</span>
+<span class="s4">//        victoryButton.setBounds(600, 330, 200, 50);</span>
+<span class="s4">//        bgPanel.add(victoryButton);</span>
+
+
+
+            <span class="s1">backButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+                <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+
+                <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setEnabled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s4">// 防止重复点击</span>
+
+                <span class="s1">TransitionManager</span><span class="s2">.</span><span class="s1">fadeOutAndSwitch</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s3">1000</span><span class="s2">, () </span><span class="s1">-&gt; </span><span class="s2">{</span>
+                    <a href="MapFrame.java.html">MapFrame</a> <span class="s1">mapFrame </span><span class="s2">= </span><span class="s0">new <a href="MapFrame.java.html">MapFrame</a></span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">);</span>
+                    <span class="s1">TransitionManager</span><span class="s2">.</span><span class="s1">fadeIn</span><span class="s2">(</span><span class="s1">mapFrame</span><span class="s2">, </span><span class="s3">500</span><span class="s2">);</span>
+                    <span class="s1">mapFrame</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s2">});</span>
+            <span class="s2">});</span>
+
+            <span class="s1">restartButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+                <span class="s4">// 这里可以添加重置游戏状态的逻辑</span>
+                <span class="s4">// 目前只是简单地重新打开一个新的 GameFrame</span>
+                <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+                <span class="s0">new </span><span class="s1">GameFrame</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">, </span><span class="s0">false</span><span class="s2">,</span><span class="s1">applyGravity</span><span class="s2">, </span><span class="s1">mode</span><span class="s2">).</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+                <span class="s1">dispose</span><span class="s2">(); </span><span class="s4">// 关闭当前游戏界面</span>
+            <span class="s2">});</span>
+
+            <span class="s1">settingsButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+                <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+                <span class="s4">// 1. 定义背景变暗的“保鲜膜”层</span>
+                <span class="s1">JPanel dimPane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+                        <span class="s4">// 这里才是真正实现“半透明黑色”的地方</span>
+                        <span class="s1">g</span><span class="s2">.</span><span class="s1">setColor</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">150</span><span class="s2">));</span>
+                        <span class="s1">g</span><span class="s2">.</span><span class="s1">fillRect</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">getWidth</span><span class="s2">(), </span><span class="s1">getHeight</span><span class="s2">());</span>
+                        <span class="s0">super</span><span class="s2">.</span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+                    <span class="s2">}</span>
+                <span class="s2">};</span>
+                <span class="s1">dimPane</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s4">// 必须设为 false 才能看到底下的内容</span>
+
+                <span class="s4">// 2. 利用 GlassPane (玻璃层) 把它铺在最顶层</span>
+                <span class="s0">this</span><span class="s2">.</span><span class="s1">setGlassPane</span><span class="s2">(</span><span class="s1">dimPane</span><span class="s2">);</span>
+                <span class="s1">dimPane</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+                <span class="s4">// 3. 打开弹窗，注意这里一定要传 this！</span>
+                <a href="SettingsDialog.java.html">SettingsDialog</a> <span class="s1">dialog </span><span class="s2">= </span><span class="s0">new <a href="SettingsDialog.java.html">SettingsDialog</a></span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">currentUser</span><span class="s2">, </span><span class="s1">cells</span><span class="s2">);</span>
+                <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+                <span class="s4">// 4. 弹窗关闭后（代码运行到这一行说明弹窗关了），撤掉变暗效果</span>
+                <span class="s1">dimPane</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+            <span class="s2">});</span>
+        <span class="s2">}</span>
+        <span class="s4">//胜利界面弹出（仅作测试）</span>
+<span class="s4">//        victoryButton.addActionListener(e -&gt; {</span>
+<span class="s4">//             JPanel dimPane = new JPanel() {</span>
+<span class="s4">//                @Override</span>
+<span class="s4">//                protected void paintComponent(Graphics g) {</span>
+<span class="s4">//                    // 这里才是真正实现“半透明黑色”的地方</span>
+<span class="s4">//                    g.setColor(new Color(0, 0, 0, 150));</span>
+<span class="s4">//                    g.fillRect(0, 0, getWidth(), getHeight());</span>
+<span class="s4">//                    super.paintComponent(g);</span>
+<span class="s4">//                }</span>
+<span class="s4">//            };</span>
+<span class="s4">//            dimPane.setOpaque(false); // 必须设为 false 才能看到底下的内容</span>
+<span class="s4">//</span>
+<span class="s4">//            // 2. 利用 GlassPane (玻璃层) 把它铺在最顶层</span>
+<span class="s4">//            this.setGlassPane(dimPane);</span>
+<span class="s4">//            dimPane.setVisible(true);</span>
+<span class="s4">//</span>
+<span class="s4">//            //先停止背景bgm，再播放胜利音乐</span>
+<span class="s4">//            SoundManager.fadeOutBGM(0); // 渐隐当前BGM</span>
+<span class="s4">//            SoundManager.playSFX(&quot;victory&quot;);</span>
+<span class="s4">//</span>
+<span class="s4">//            VictoryDialog dialog = new VictoryDialog(this, currentUser);</span>
+<span class="s4">//</span>
+<span class="s4">//            dialog.setVisible(true);</span>
+<span class="s4">//</span>
+<span class="s4">//            dimPane.setVisible(false);</span>
+<span class="s4">//        });</span>
+<span class="s4">//    }</span>
+
+
+    <span class="s2">}</span>
+
+
+
+</pre>
+</body>
+</html>

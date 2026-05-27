@@ -1,0 +1,6 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "audioCues.enabled": "off",
+    "audioCues.lineHasError": "off",
+    "audioCues.lineHasWarning": "off"
+}

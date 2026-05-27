@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>OneShotAnimationPanel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #5f826b; font-style: italic;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+.s6 { color: #6aab73;}
+.s7 { color: #67a37c; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+OneShotAnimationPanel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">SoundManager</span><span class="s2">;</span>
+<span class="s3">/**</span>
+ <span class="s3">* 一个专门用来播放一次性PNG序列动画的面板。</span>
+ <span class="s3">* 比如：胜利动画、消除特效、按钮出现动画等。</span>
+ <span class="s3">*/</span>
+<span class="s0">public class </span><span class="s1">OneShotAnimationPanel </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Image</span><span class="s2">&gt; </span><span class="s1">frames </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private int </span><span class="s1">currentFrame </span><span class="s2">= -</span><span class="s4">1</span><span class="s2">; </span><span class="s5">// -1 表示动画未开始</span>
+    <span class="s0">private </span><span class="s1">Timer timer</span><span class="s2">;</span>
+
+    <span class="s0">private int </span><span class="s1">triggerSFX</span><span class="s2">=-</span><span class="s4">1</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String sfxName</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Runnable onComplete</span><span class="s2">; </span><span class="s5">// 动画播放完毕后要执行的“回调”指令</span>
+
+
+    <span class="s0">public </span><span class="s1">OneShotAnimationPanel</span><span class="s2">(</span><span class="s1">String imagePrefix</span><span class="s2">, </span><span class="s0">int </span><span class="s1">frameCount</span><span class="s2">, </span><span class="s0">int </span><span class="s1">delay</span><span class="s2">) {</span>
+        <span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s5">// 必须是透明的！</span>
+
+        <span class="s5">// 加载所有动画帧</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">frameCount</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s5">// 注意：你的 Resprite 导出如果是从 0 开始，这里就用 i</span>
+            <span class="s5">// 如果是从 1 开始，就用 i + 1</span>
+            <span class="s1">frames</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s6">&quot;resource/images/&quot; </span><span class="s2">+ </span><span class="s1">imagePrefix </span><span class="s2">+ </span><span class="s1">i </span><span class="s2">+ </span><span class="s6">&quot;.png&quot;</span><span class="s2">).</span><span class="s1">getImage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+        
+        <span class="s5">// 创建定时器</span>
+        <span class="s1">timer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s1">delay</span><span class="s2">, </span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">currentFrame</span><span class="s2">++;</span>
+            <span class="s0">if</span><span class="s2">(</span><span class="s1">triggerSFX</span><span class="s2">==</span><span class="s1">currentFrame</span><span class="s2">&amp;&amp;</span><span class="s1">sfxName</span><span class="s2">!=</span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s1">sfxName</span><span class="s2">);</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentFrame </span><span class="s2">&gt;= </span><span class="s1">frames</span><span class="s2">.</span><span class="s1">size</span><span class="s2">()) {</span>
+                <span class="s5">// 动画播完了</span>
+                <span class="s1">timer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">onComplete </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                    <span class="s1">onComplete</span><span class="s2">.</span><span class="s1">run</span><span class="s2">(); </span><span class="s5">// 执行“动画播完了该干啥”的指令</span>
+                <span class="s2">}</span>
+                <span class="s0">this</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s5">// 播放完毕后隐藏自己</span>
+            <span class="s2">}</span>
+            <span class="s1">repaint</span><span class="s2">(); </span><span class="s5">// 刷新画面，绘制下一帧</span>
+        <span class="s2">});</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">applySFX</span><span class="s2">(</span><span class="s0">int </span><span class="s1">startcount</span><span class="s2">,</span><span class="s1">String sfxName</span><span class="s2">) {</span>
+        <span class="s1">triggerSFX</span><span class="s2">=</span><span class="s1">startcount</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">sfxName</span><span class="s2">=</span><span class="s1">sfxName</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* 开始播放动画</span>
+     <span class="s3">* </span><span class="s7">@param </span><span class="s3">onCompleteCallback 动画播放完毕后要执行的操作</span>
+     <span class="s3">*/</span>
+    <span class="s0">public void </span><span class="s1">play</span><span class="s2">(</span><span class="s1">Runnable onCompleteCallback</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">onComplete </span><span class="s2">= </span><span class="s1">onCompleteCallback</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">currentFrame </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span><span class="s5">// 开始播放时让自己可见</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+        <span class="s5">// 如果动画正在播放，就绘制当前帧</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">currentFrame </span><span class="s2">&gt;= </span><span class="s4">0 </span><span class="s2">&amp;&amp; </span><span class="s1">currentFrame </span><span class="s2">&lt; </span><span class="s1">frames</span><span class="s2">.</span><span class="s1">size</span><span class="s2">()) {</span>
+            <span class="s1">g</span><span class="s2">.</span><span class="s1">drawImage</span><span class="s2">(</span><span class="s1">frames</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentFrame</span><span class="s2">), </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s1">getWidth</span><span class="s2">(), </span><span class="s1">getHeight</span><span class="s2">(), </span><span class="s0">this</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

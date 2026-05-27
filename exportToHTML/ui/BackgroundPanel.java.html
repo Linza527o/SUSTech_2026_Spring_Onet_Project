@@ -1,0 +1,149 @@
+<html>
+<head>
+<title>BackgroundPanel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #6aab73;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+BackgroundPanel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">BackgroundPanel </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+    <span class="s0">public </span><span class="s1">Image backgroundImage</span><span class="s2">;</span>
+
+    <span class="s3">// 【新增】保存需要画的连线路径和格子信息</span>
+    <span class="s0">private </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">path </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+    <span class="s0">private <a href="Cell.java.html">Cell</a> </span><span class="s1">cellInfo</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">JLabel comboDisplayLabel</span><span class="s2">;</span>
+    <span class="s3">// 构造函数稍微改一下，把 Cell 传进来，因为画线需要格子的坐标数据</span>
+    <span class="s0">public </span><span class="s1">BackgroundPanel</span><span class="s2">(</span><span class="s1">String imagePath</span><span class="s2">, <a href="Cell.java.html">Cell</a> </span><span class="s1">cellInfo</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">backgroundImage </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s1">imagePath</span><span class="s2">).</span><span class="s1">getImage</span><span class="s2">();</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">cellInfo </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">;</span>
+        <span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">comboDisplayLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Combo: 0&quot;</span><span class="s2">);</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s4">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">));</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s5">255</span><span class="s2">, </span><span class="s5">150</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)); </span><span class="s3">// 亮橙色</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JLabel</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JLabel</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s5">1030</span><span class="s2">, </span><span class="s5">120</span><span class="s2">, </span><span class="s5">200</span><span class="s2">, </span><span class="s5">50</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">comboDisplayLabel</span><span class="s2">);</span><span class="s3">// 设置为绝对布局，方便在上面摆放按钮</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">int </span><span class="s1">iconOrder</span><span class="s2">;</span>
+    <span class="s3">// 【新增】对外开放的画线并消除方法</span>
+    <span class="s0">public void </span><span class="s1">showPathAndClear</span><span class="s2">(</span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">path</span><span class="s2">, </span><span class="s1">JButton btn1</span><span class="s2">, </span><span class="s1">JButton btn2</span><span class="s2">,</span><span class="s0">int </span><span class="s1">iconO</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">path  </span><span class="s2">= </span><span class="s1">path</span><span class="s2">;</span>
+        <span class="s1">setBtnColor</span><span class="s2">(</span><span class="s1">iconO</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">(); </span><span class="s3">// 触发重绘（画线）</span>
+
+        <span class="s1">Timer timer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s5">300</span><span class="s2">, </span><span class="s1">e -&gt; </span><span class="s2">{</span><span class="s0">this</span><span class="s2">.</span><span class="s1">path </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span><span class="s1">btn1</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);  </span><span class="s3">// 隐藏方块1</span>
+            <span class="s1">btn2</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span><span class="s0">this</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">();});</span>
+
+
+
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">setRepeats</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// 1. 【画底图】留在 paintComponent 里，它是最底层的</span>
+
+    <span class="s0">public </span><span class="s1">Color btnColor </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s5">128</span><span class="s2">, </span><span class="s5">0</span><span class="s2">, </span><span class="s5">255</span><span class="s2">);</span>
+
+
+<span class="s1">@Override</span>
+<span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+    <span class="s0">super</span><span class="s2">.</span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+
+    <span class="s3">// 只画背景图</span>
+    <span class="s0">if </span><span class="s2">(</span><span class="s1">backgroundImage </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+        <span class="s1">g</span><span class="s2">.</span><span class="s1">drawImage</span><span class="s2">(</span><span class="s1">backgroundImage</span><span class="s2">, </span><span class="s5">0</span><span class="s2">, </span><span class="s5">0</span><span class="s2">, </span><span class="s1">getWidth</span><span class="s2">(), </span><span class="s1">getHeight</span><span class="s2">(), </span><span class="s0">this</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setBtnColor</span><span class="s2">(</span><span class="s0">int </span><span class="s1">iconO</span><span class="s2">){</span>
+        <span class="s1">Color tmp </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s5">128</span><span class="s2">, </span><span class="s5">0</span><span class="s2">, </span><span class="s5">255</span><span class="s2">);</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color not chosen&quot;</span><span class="s2">);</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">1</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">BLACK</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 1&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">2</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">GREEN</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 2&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">3</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">MAGENTA</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 3&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">4</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">ORANGE</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 4&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">5</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">BLUE</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 5&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">6</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">BLUE</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 6&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">7</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">ORANGE</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 7&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">8</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">MAGENTA</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 8&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">9</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">BLACK</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 9&quot;</span><span class="s2">);}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">iconO </span><span class="s2">== </span><span class="s5">10</span><span class="s2">){</span><span class="s1">tmp </span><span class="s2">= </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">;</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Click on a button, color 10&quot;</span><span class="s2">);}</span>
+        <span class="s1">btnColor </span><span class="s2">= </span><span class="s1">tmp</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s3">// 2. 【新增画顶层】重写 paint 方法，它负责统筹全局</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">paint</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+        <span class="s3">// 这句话非常关键！它会依次去调用 paintComponent(画底图) -&gt; 画子组件(画按钮)</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">paint</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+
+
+        <span class="s3">// 在所有东西都画完之后，我们最后来画红线！这样它就处于绝对的“最上层”了</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">path </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">path</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() &gt;= </span><span class="s5">2 </span><span class="s2">&amp;&amp; </span><span class="s1">cellInfo </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">Graphics2D g2d </span><span class="s2">= (</span><span class="s1">Graphics2D</span><span class="s2">) </span><span class="s1">g</span><span class="s2">;</span>
+
+            <span class="s3">// 开启抗锯齿，让线和圆更平滑好看</span>
+            <span class="s1">g2d</span><span class="s2">.</span><span class="s1">setRenderingHint</span><span class="s2">(</span><span class="s1">RenderingHints</span><span class="s2">.</span><span class="s1">KEY_ANTIALIASING</span><span class="s2">, </span><span class="s1">RenderingHints</span><span class="s2">.</span><span class="s1">VALUE_ANTIALIAS_ON</span><span class="s2">);</span>
+            <span class="s1">g2d</span><span class="s2">.</span><span class="s1">setColor</span><span class="s2">(</span><span class="s1">btnColor</span><span class="s2">);</span>
+            <span class="s1">g2d</span><span class="s2">.</span><span class="s1">setStroke</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BasicStroke</span><span class="s2">(</span><span class="s5">4.0f</span><span class="s2">, </span><span class="s1">BasicStroke</span><span class="s2">.</span><span class="s1">CAP_ROUND</span><span class="s2">, </span><span class="s1">BasicStroke</span><span class="s2">.</span><span class="s1">JOIN_ROUND</span><span class="s2">));</span>
+
+            <span class="s3">// 画线段</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s5">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">path</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() - </span><span class="s5">1</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+                <span class="s1">Point p1 </span><span class="s2">= </span><span class="s1">path</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+                <span class="s1">Point p2 </span><span class="s2">= </span><span class="s1">path</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i </span><span class="s2">+ </span><span class="s5">1</span><span class="s2">);</span>
+
+                <span class="s0">int </span><span class="s1">px1 </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getLeftbound</span><span class="s2">() + </span><span class="s1">p1</span><span class="s2">.</span><span class="s1">y </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s5">2</span><span class="s2">;</span>
+                <span class="s0">int </span><span class="s1">py1 </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getUpbound</span><span class="s2">()   + </span><span class="s1">p1</span><span class="s2">.</span><span class="s1">x </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s5">2</span><span class="s2">;</span>
+                <span class="s0">int </span><span class="s1">px2 </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getLeftbound</span><span class="s2">() + </span><span class="s1">p2</span><span class="s2">.</span><span class="s1">y </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s5">2</span><span class="s2">;</span>
+                <span class="s0">int </span><span class="s1">py2 </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getUpbound</span><span class="s2">()   + </span><span class="s1">p2</span><span class="s2">.</span><span class="s1">x </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s5">2</span><span class="s2">;</span>
+
+                <span class="s1">g2d</span><span class="s2">.</span><span class="s1">drawLine</span><span class="s2">(</span><span class="s1">px1</span><span class="s2">, </span><span class="s1">py1</span><span class="s2">, </span><span class="s1">px2</span><span class="s2">, </span><span class="s1">py2</span><span class="s2">);</span>
+            <span class="s2">}</span>
+
+            <span class="s3">// 画拐点圆圈</span>
+            <span class="s0">int </span><span class="s1">dotRadius </span><span class="s2">= </span><span class="s5">8</span><span class="s2">;</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s5">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">path</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() ; </span><span class="s1">i</span><span class="s2">++) {</span>
+                <span class="s1">Point corner </span><span class="s2">= </span><span class="s1">path</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+                <span class="s0">int </span><span class="s1">cx </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getLeftbound</span><span class="s2">() + </span><span class="s1">corner</span><span class="s2">.</span><span class="s1">y </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s5">2</span><span class="s2">;</span>
+                <span class="s0">int </span><span class="s1">cy </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getUpbound</span><span class="s2">()   + </span><span class="s1">corner</span><span class="s2">.</span><span class="s1">x </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s5">2</span><span class="s2">;</span>
+                <span class="s1">g2d</span><span class="s2">.</span><span class="s1">fillOval</span><span class="s2">(</span><span class="s1">cx </span><span class="s2">- </span><span class="s1">dotRadius</span><span class="s2">, </span><span class="s1">cy </span><span class="s2">- </span><span class="s1">dotRadius</span><span class="s2">, </span><span class="s1">dotRadius </span><span class="s2">* </span><span class="s5">2</span><span class="s2">, </span><span class="s1">dotRadius </span><span class="s2">* </span><span class="s5">2</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">updateComboDisplay</span><span class="s2">(</span><span class="s0">int </span><span class="s1">combocnt</span><span class="s2">) {</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">combocnt </span><span class="s2">&gt;= </span><span class="s5">2</span><span class="s2">) {</span>
+            <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Combo: &quot; </span><span class="s2">+ </span><span class="s1">combocnt</span><span class="s2">);</span>
+            <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s5">255</span><span class="s2">, </span><span class="s5">50</span><span class="s2">, </span><span class="s5">50</span><span class="s2">)); </span><span class="s3">// 连击时可以变成红色</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Yet to come&quot;</span><span class="s2">);</span>
+            <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s5">255</span><span class="s2">, </span><span class="s5">150</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)); </span><span class="s3">// 断连恢复橙色</span>
+        <span class="s2">}</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">revalidate</span><span class="s2">();</span>
+        <span class="s1">comboDisplayLabel</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">();</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

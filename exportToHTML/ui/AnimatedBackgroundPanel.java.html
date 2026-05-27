@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>AnimatedBackgroundPanel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+AnimatedBackgroundPanel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">AnimatedBackgroundPanel </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Image</span><span class="s2">&gt; </span><span class="s1">frames </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private int </span><span class="s1">currentFrame </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Timer timer</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">AnimatedBackgroundPanel</span><span class="s2">(</span><span class="s1">String prefix</span><span class="s2">, </span><span class="s0">int </span><span class="s1">frameCount</span><span class="s2">, </span><span class="s0">int </span><span class="s1">delay</span><span class="s2">) {</span>
+        <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s4">// 加载所有帧，假设文件名是 bg_0.png, bg_1.png ...</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">1</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt;= </span><span class="s1">frameCount</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s1">frames</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/&quot; </span><span class="s2">+ </span><span class="s1">prefix </span><span class="s2">+ </span><span class="s5">&quot;_&quot; </span><span class="s2">+ </span><span class="s1">i </span><span class="s2">+ </span><span class="s5">&quot;.png&quot;</span><span class="s2">).</span><span class="s1">getImage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+
+        <span class="s4">// 创建定时器：每隔 delay 毫秒切换一帧</span>
+        <span class="s1">timer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s1">delay</span><span class="s2">, </span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">currentFrame </span><span class="s2">= (</span><span class="s1">currentFrame </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">) % </span><span class="s1">frames</span><span class="s2">.</span><span class="s1">size</span><span class="s2">();</span>
+            <span class="s1">repaint</span><span class="s2">(); </span><span class="s4">// 关键：通知界面重新绘图</span>
+        <span class="s2">});</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">frames</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() &gt; </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s4">// 将当前帧画满整个面板</span>
+            <span class="s1">g</span><span class="s2">.</span><span class="s1">drawImage</span><span class="s2">(</span><span class="s1">frames</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentFrame</span><span class="s2">), </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">getWidth</span><span class="s2">(), </span><span class="s1">getHeight</span><span class="s2">(), </span><span class="s0">this</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">stopAnimation</span><span class="s2">() {</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

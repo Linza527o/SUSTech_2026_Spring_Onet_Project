@@ -1,0 +1,301 @@
+<html>
+<head>
+<title>LeaderboardPanel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+LeaderboardPanel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">manager</span><span class="s2">.</span><span class="s1">AccountInfo</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">manager</span><span class="s2">.</span><span class="s1">AccountManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.</span><span class="s1">border</span><span class="s2">.</span><span class="s1">EmptyBorder</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">LeaderboardPanel </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">CardLayout cardLayout</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">JPanel cardContainer</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Image bgImage</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">type</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">diff</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">LeaderboardPanel</span><span class="s2">(</span><span class="s1">AccountInfo currentUser</span><span class="s2">, </span><span class="s0">int </span><span class="s1">type</span><span class="s2">, </span><span class="s0">int </span><span class="s1">diff</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">type </span><span class="s2">= </span><span class="s1">type</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">diff </span><span class="s2">= </span><span class="s1">diff</span><span class="s2">;</span>
+
+        <span class="s1">setBounds</span><span class="s2">(</span><span class="s3">40</span><span class="s2">, </span><span class="s3">120</span><span class="s2">, </span><span class="s3">204</span><span class="s2">, </span><span class="s3">552</span><span class="s2">); </span>
+        
+        <span class="s4">// 把图片插入当作背景</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">bgImage </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/leaderboard_bg.png&quot;</span><span class="s2">).</span><span class="s1">getImage</span><span class="s2">();</span>
+        <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">5</span><span class="s2">)); </span><span class="s4">// 上下间距5像素</span>
+        <span class="s1">setBorder</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span>
+        <span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+
+        <span class="s4">// ==========================================</span>
+        <span class="s4">// 1. 顶部 Tab 切换按钮</span>
+        <span class="s4">// ==========================================</span>
+        <span class="s1">JPanel topTabPanel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">GridLayout</span><span class="s2">(</span><span class="s3">1</span><span class="s2">, </span><span class="s3">3</span><span class="s2">));</span>
+        <span class="s1">topTabPanel</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+
+        <span class="s1">JButton scoreTab </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;分数&quot;</span><span class="s2">);</span>
+        <span class="s1">JButton timeTab </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;时间&quot;</span><span class="s2">);</span>
+        <span class="s1">JButton levelTab </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;关卡&quot;</span><span class="s2">);</span>
+
+        <span class="s4">// 把三个按钮放进一个数组里，方便后面写点击逻辑</span>
+        <span class="s1">JButton</span><span class="s2">[] </span><span class="s1">tabs </span><span class="s2">= {</span><span class="s1">scoreTab</span><span class="s2">, </span><span class="s1">timeTab</span><span class="s2">, </span><span class="s1">levelTab</span><span class="s2">};</span>
+
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">JButton tab </span><span class="s2">: </span><span class="s1">tabs</span><span class="s2">) {</span>
+            <span class="s1">tab</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+            <span class="s1">tab</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+            <span class="s1">tab</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">LIGHT_GRAY</span><span class="s2">);</span>
+            <span class="s1">tab</span><span class="s2">.</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">40</span><span class="s2">, </span><span class="s3">30</span><span class="s2">, </span><span class="s3">60</span><span class="s2">)); </span><span class="s4">// 未选中颜色</span>
+            <span class="s1">tab</span><span class="s2">.</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s1">BorderFactory</span><span class="s2">.</span><span class="s1">createLineBorder</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">158</span><span class="s2">, </span><span class="s3">89</span><span class="s2">, </span><span class="s3">181</span><span class="s2">)));</span>
+        <span class="s2">}</span>
+
+        <span class="s4">// 默认选中第一个</span>
+        <span class="s1">scoreTab</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">scoreTab</span><span class="s2">.</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">80</span><span class="s2">, </span><span class="s3">60</span><span class="s2">, </span><span class="s3">110</span><span class="s2">)); </span><span class="s4">// 选中颜色</span>
+
+        <span class="s4">// ==========================================</span>
+        <span class="s4">// 2. 中间 CardLayout 容器</span>
+        <span class="s4">// ==========================================</span>
+        <span class="s1">cardLayout </span><span class="s2">= </span><span class="s0">new </span><span class="s1">CardLayout</span><span class="s2">();</span>
+        <span class="s1">cardContainer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s1">cardLayout</span><span class="s2">);</span>
+        <span class="s1">cardContainer</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s4">// 创建三个不同的排行榜列表，并添加到卡片容器</span>
+        <span class="s1">cardContainer</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">createRankListPanel</span><span class="s2">(</span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">getLeaderboardByScore</span><span class="s2">(</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">), </span><span class="s5">&quot;score&quot;</span><span class="s2">), </span><span class="s5">&quot;SCORE&quot;</span><span class="s2">);</span>
+        <span class="s1">cardContainer</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">createRankListPanel</span><span class="s2">(</span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">getLeaderboardByTime</span><span class="s2">(</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">), </span><span class="s5">&quot;time&quot;</span><span class="s2">), </span><span class="s5">&quot;TIME&quot;</span><span class="s2">);</span>
+        <span class="s1">cardContainer</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">createRankListPanel</span><span class="s2">(</span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">getLeaderboardByLevels</span><span class="s2">(</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">), </span><span class="s5">&quot;levels&quot;</span><span class="s2">), </span><span class="s5">&quot;LEVELS&quot;</span><span class="s2">);</span>
+
+        <span class="s4">// ==========================================</span>
+        <span class="s4">// 3. 底部固定的当前玩家信息</span>
+        <span class="s4">// ==========================================</span>
+        <span class="s4">// 这个可以根据切换的 Tab 动态更新，暂时先做一个简单的</span>
+        <span class="s1">JPanel bottomPanel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(); </span>
+        <span class="s1">bottomPanel</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">JLabel myRankLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">();</span>
+        <span class="s1">myRankLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+        <span class="s1">myRankLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">updateMyRankLabel</span><span class="s2">(</span><span class="s1">myRankLabel</span><span class="s2">, </span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">getRankByScore</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">,</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">));</span>
+        <span class="s1">bottomPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">myRankLabel</span><span class="s2">);</span>
+
+        <span class="s4">// 拼装</span>
+        <span class="s1">topTabPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">scoreTab</span><span class="s2">);</span>
+        <span class="s1">topTabPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">timeTab</span><span class="s2">);</span>
+        <span class="s1">topTabPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">levelTab</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">topTabPanel</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">NORTH</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">cardContainer</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">bottomPanel</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">SOUTH</span><span class="s2">);</span>
+
+        <span class="s4">// ==========================================</span>
+        <span class="s4">// 4. Tab 点击切换逻辑</span>
+        <span class="s4">// ==========================================</span>
+        <span class="s1">scoreTab</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">cardLayout</span><span class="s2">.</span><span class="s1">show</span><span class="s2">(</span><span class="s1">cardContainer</span><span class="s2">, </span><span class="s5">&quot;SCORE&quot;</span><span class="s2">);</span>
+            <span class="s1">updateTabStyles</span><span class="s2">(</span><span class="s1">tabs</span><span class="s2">, </span><span class="s1">scoreTab</span><span class="s2">); </span><span class="s4">// 更新按钮样式</span>
+            <span class="s1">updateMyRankLabel</span><span class="s2">(</span><span class="s1">myRankLabel</span><span class="s2">, </span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">getRankByScore</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">,</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">)); </span><span class="s4">// 更新当前玩家排名</span>
+            
+        <span class="s2">});</span>
+        <span class="s1">timeTab</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">cardLayout</span><span class="s2">.</span><span class="s1">show</span><span class="s2">(</span><span class="s1">cardContainer</span><span class="s2">, </span><span class="s5">&quot;TIME&quot;</span><span class="s2">);</span>
+            <span class="s1">updateTabStyles</span><span class="s2">(</span><span class="s1">tabs</span><span class="s2">, </span><span class="s1">timeTab</span><span class="s2">);</span>
+            <span class="s1">updateMyRankLabel</span><span class="s2">(</span><span class="s1">myRankLabel</span><span class="s2">, </span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">getRankByTime</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">,</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">)); </span><span class="s4">// 更新当前玩家排名</span>
+        <span class="s2">});</span>
+        <span class="s1">levelTab</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">cardLayout</span><span class="s2">.</span><span class="s1">show</span><span class="s2">(</span><span class="s1">cardContainer</span><span class="s2">, </span><span class="s5">&quot;LEVELS&quot;</span><span class="s2">);</span>
+            <span class="s1">updateTabStyles</span><span class="s2">(</span><span class="s1">tabs</span><span class="s2">, </span><span class="s1">levelTab</span><span class="s2">);</span>
+            <span class="s1">updateMyRankLabel</span><span class="s2">(</span><span class="s1">myRankLabel</span><span class="s2">, </span><span class="s1">AccountManager</span><span class="s2">.</span><span class="s1">getRankByLevels</span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">,</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">)); </span><span class="s4">// 更新当前玩家排名</span>
+        <span class="s2">});</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+        <span class="s4">// **关键**：这里**不要**调用 super.paintComponent(g);</span>
+        <span class="s4">// 因为我们要通过绘制新的全覆盖背景层（图片或实心颜色）来彻底清除旧的绘图，从而消除叠加。</span>
+
+        <span class="s4">// 获取组件当前的宽高</span>
+        <span class="s0">int </span><span class="s1">width </span><span class="s2">= </span><span class="s1">getWidth</span><span class="s2">();</span>
+        <span class="s0">int </span><span class="s1">height </span><span class="s2">= </span><span class="s1">getHeight</span><span class="s2">();</span>
+
+        <span class="s4">// 1. 核心解决方案：绘制背景图（拉伸以填充整个面板）</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">bgImage </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s4">// 使用 drawImage 的拉伸重载：drawImage(Image img, int x, int y, int width, int height, ImageObserver observer)</span>
+            <span class="s1">g</span><span class="s2">.</span><span class="s1">drawImage</span><span class="s2">(</span><span class="s1">bgImage</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">width</span><span class="s2">, </span><span class="s1">height</span><span class="s2">, </span><span class="s0">this</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s4">// -- 叠消除：如果图片加载失败，绘制一个实心颜色作为备选背景，以彻底消除叠加 --</span>
+            <span class="s4">// 这里用一个深实心紫色</span>
+            <span class="s1">g</span><span class="s2">.</span><span class="s1">setColor</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">25</span><span class="s2">, </span><span class="s3">15</span><span class="s2">, </span><span class="s3">35</span><span class="s2">)); </span>
+            <span class="s1">g</span><span class="s2">.</span><span class="s1">fillRect</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">width</span><span class="s2">, </span><span class="s1">height</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s4">// --- 动态创建排行榜列表的工厂方法 ---</span>
+    <span class="s0">private </span><span class="s1">JScrollPane createRankListPanel</span><span class="s2">(</span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">AccountInfo</span><span class="s2">&gt; </span><span class="s1">data</span><span class="s2">, </span><span class="s1">String type</span><span class="s2">) {</span>
+        <span class="s1">JPanel listPanel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">();</span>
+        <span class="s1">listPanel</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BoxLayout</span><span class="s2">(</span><span class="s1">listPanel</span><span class="s2">, </span><span class="s1">BoxLayout</span><span class="s2">.</span><span class="s1">Y_AXIS</span><span class="s2">));</span>
+        <span class="s1">listPanel</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">data</span><span class="s2">.</span><span class="s1">size</span><span class="s2">(); </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s1">AccountInfo user </span><span class="s2">= </span><span class="s1">data</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+            <span class="s0">int </span><span class="s1">rank </span><span class="s2">= </span><span class="s1">i </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">;</span>
+
+            <span class="s4">// ==========================================</span>
+            <span class="s4">// 1. 为每一行创建一个专属的 JPanel，用 BorderLayout(用JLabel排版不清，容易导致错位/重叠)</span>
+            <span class="s4">// ==========================================</span>
+            <span class="s4">/*JPanel rowPanel = new JPanel(new BorderLayout(10, 0)); // 左右间距10像素 
+            rowPanel.setOpaque(false); 
+             
+            // 2. 创建三个独立的 JLabel：名次、名字、数值 
+            JLabel rankLabel = new JLabel(); 
+            JLabel nameLabel = new JLabel(user.getAccount(), SwingConstants.LEFT); 
+            JLabel valueLabel = new JLabel(&quot;&quot;, SwingConstants.RIGHT); 
+ 
+            rankLabel.setFont(FontManager.pixelFontBody); 
+            rankLabel.setForeground(Color.WHITE); 
+            nameLabel.setFont(FontManager.pixelFontBody); 
+            nameLabel.setForeground(Color.WHITE); 
+            valueLabel.setFont(FontManager.pixelFontBody); 
+            valueLabel.setForeground(Color.WHITE); 
+ 
+            // 3. 根据排名填充名次 JLabel (皇冠或数字) 
+            if (rank &lt;= 3) { 
+                rankLabel.setIcon(scaleIcon(&quot;resource/images/crown_&quot; + rank + &quot;.png&quot;, 24, 24)); 
+            } else { 
+                rankLabel.setText(String.valueOf(rank)); 
+                rankLabel.setPreferredSize(new Dimension(24, 24)); // 给数字也留出皇冠那么宽 
+                rankLabel.setHorizontalAlignment(SwingConstants.CENTER); 
+            } 
+ 
+            // 4. 根据类型填充数值 JLabel，并设置颜色 
+            switch (type) { 
+                case &quot;time&quot;: valueLabel.setText(user.getFormattedShortestTime()); break; 
+                case &quot;levels&quot;: valueLabel.setText(user.getClearedLevels() + &quot; 关&quot;); break; 
+                default: valueLabel.setText(String.valueOf(user.getBestScore())); break; 
+            } 
+ 
+            // 5. 将三个 JLabel 添加到 rowPanel 中 
+            rowPanel.add(rankLabel, BorderLayout.WEST); 
+            rowPanel.add(nameLabel, BorderLayout.CENTER); 
+            rowPanel.add(valueLabel, BorderLayout.EAST); 
+ 
+            listPanel.add(rowPanel);*/</span>
+            <span class="s4">//JLabel写法</span>
+            <span class="s1">String value</span><span class="s2">; </span><span class="s4">// 根据类型显示不同的值</span>
+            <span class="s0">switch </span><span class="s2">(</span><span class="s1">type</span><span class="s2">) {</span>
+                <span class="s0">case </span><span class="s5">&quot;time&quot;</span><span class="s2">: </span><span class="s1">value </span><span class="s2">= </span><span class="s1">user</span><span class="s2">.</span><span class="s1">getFormattedShortestTime</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">type</span><span class="s2">,</span><span class="s1">diff</span><span class="s2">); </span><span class="s0">break</span><span class="s2">;</span>
+                <span class="s0">case </span><span class="s5">&quot;levels&quot;</span><span class="s2">: </span><span class="s1">value </span><span class="s2">= </span><span class="s1">user</span><span class="s2">.</span><span class="s1">getClearedLevels</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">type</span><span class="s2">, </span><span class="s1">diff</span><span class="s2">) + </span><span class="s5">&quot; 关&quot;</span><span class="s2">; </span><span class="s0">break</span><span class="s2">;</span>
+                <span class="s0">default</span><span class="s2">: </span><span class="s1">value </span><span class="s2">= </span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">user</span><span class="s2">.</span><span class="s1">getBestScore</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">type</span><span class="s2">, </span><span class="s1">diff</span><span class="s2">)); </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s2">}</span>
+
+               <span class="s4">// 1. 名字截断处理 (如果大于 5 个字，就截断并加省略号)</span>
+            <span class="s4">// ==========================================</span>
+            <span class="s1">String displayName </span><span class="s2">= </span><span class="s1">user</span><span class="s2">.</span><span class="s1">getAccount</span><span class="s2">();</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">displayName</span><span class="s2">.</span><span class="s1">length</span><span class="s2">() &gt; </span><span class="s3">5</span><span class="s2">) {</span>
+                <span class="s4">// 截取前 4 个字，加上 &quot;..&quot;</span>
+                <span class="s1">displayName </span><span class="s2">= </span><span class="s1">displayName</span><span class="s2">.</span><span class="s1">substring</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">4</span><span class="s2">) + </span><span class="s5">&quot;..&quot;</span><span class="s2">; </span>
+            <span class="s2">}</span>
+
+            <span class="s4">// ==========================================</span>
+            <span class="s4">// 2. 获取对应的颜色</span>
+            <span class="s4">// ==========================================</span>
+            <span class="s1">String colorStr </span><span class="s2">= </span><span class="s5">&quot;white&quot;</span><span class="s2">; </span><span class="s4">// 默认白色</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">rank </span><span class="s2">== </span><span class="s3">1</span><span class="s2">) </span><span class="s1">colorStr </span><span class="s2">= </span><span class="s5">&quot;yellow&quot;</span><span class="s2">;</span>
+
+            <span class="s4">// ==========================================</span>
+            <span class="s4">// 3. 构建完全统一的 3 列 HTML 表格</span>
+            <span class="s4">// ==========================================</span>
+            <span class="s1">String htmlText</span><span class="s2">;</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">rank </span><span class="s2">&lt;= </span><span class="s3">3</span><span class="s2">) {</span>
+                <span class="s4">// 前三名：用 HTML 的 &lt;img&gt; 标签显示皇冠</span>
+                <span class="s4">// 把本地文件路径转换为 HTML 能识别的 URL 格式</span>
+                <span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">File crownFile </span><span class="s2">= </span><span class="s0">new </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;resource/images/crown_&quot; </span><span class="s2">+ </span><span class="s1">rank </span><span class="s2">+ </span><span class="s5">&quot;.png&quot;</span><span class="s2">);</span>
+                <span class="s1">String crownUrl </span><span class="s2">= </span><span class="s5">&quot;&quot;</span><span class="s2">;</span>
+                <span class="s0">try </span><span class="s2">{ </span><span class="s1">crownUrl </span><span class="s2">= </span><span class="s1">crownFile</span><span class="s2">.</span><span class="s1">toURI</span><span class="s2">().</span><span class="s1">toURL</span><span class="s2">().</span><span class="s1">toString</span><span class="s2">(); } </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {}</span>
+
+                <span class="s4">// 第一列放皇冠图片，第二列放名字，第三列放数值</span>
+                <span class="s1">htmlText </span><span class="s2">= </span><span class="s5">&quot;&lt;html&gt;&lt;table border='0' cellpadding='0' cellspacing='0' style='color:&quot; </span><span class="s2">+ </span><span class="s1">colorStr </span><span class="s2">+ </span><span class="s5">&quot;;'&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;tr&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;td width='35' align='center'&gt;&lt;img src='&quot; </span><span class="s2">+ </span><span class="s1">crownUrl </span><span class="s2">+ </span><span class="s5">&quot;' width='20' height='20'&gt;&lt;/td&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;td width='80'&gt;&quot; </span><span class="s2">+ </span><span class="s1">displayName </span><span class="s2">+ </span><span class="s5">&quot;&lt;/td&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;td width='80' align='right'&gt;&quot; </span><span class="s2">+ </span><span class="s1">value </span><span class="s2">+ </span><span class="s5">&quot;&lt;/td&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;/tr&gt;&lt;/table&gt;&lt;/html&gt;&quot;</span><span class="s2">;</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s4">// 4名及以后：第一列直接写名次数字</span>
+                <span class="s1">htmlText </span><span class="s2">= </span><span class="s5">&quot;&lt;html&gt;&lt;table border='0' cellpadding='0' cellspacing='0' style='color:&quot; </span><span class="s2">+ </span><span class="s1">colorStr </span><span class="s2">+ </span><span class="s5">&quot;;'&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;tr&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;td width='35' align='center'&gt;&quot; </span><span class="s2">+ </span><span class="s1">rank </span><span class="s2">+ </span><span class="s5">&quot;&lt;/td&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;td width='80'&gt;&quot; </span><span class="s2">+ </span><span class="s1">displayName </span><span class="s2">+ </span><span class="s5">&quot;&lt;/td&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;td width='80' align='right'&gt;&quot; </span><span class="s2">+ </span><span class="s1">value </span><span class="s2">+ </span><span class="s5">&quot;&lt;/td&gt;&quot; </span><span class="s2">+</span>
+                           <span class="s5">&quot;&lt;/tr&gt;&lt;/table&gt;&lt;/html&gt;&quot;</span><span class="s2">;</span>
+            <span class="s2">}</span>
+
+            <span class="s4">// ==========================================</span>
+            <span class="s4">// 应用到 JLabel</span>
+            <span class="s4">// ==========================================</span>
+            <span class="s1">JLabel rowLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">();</span>
+            <span class="s1">rowLabel</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span><span class="s4">// 确保去掉了原生的图标，完全交给 HTML</span>
+            <span class="s1">rowLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">htmlText</span><span class="s2">);</span>
+            <span class="s1">rowLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+            <span class="s4">// 给上下留一点间距，不至于太挤</span>
+            <span class="s1">rowLabel</span><span class="s2">.</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s0">new </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.</span><span class="s1">border</span><span class="s2">.</span><span class="s1">EmptyBorder</span><span class="s2">(</span><span class="s3">5</span><span class="s2">, </span><span class="s3">5</span><span class="s2">, </span><span class="s3">5</span><span class="s2">, </span><span class="s3">5</span><span class="s2">)); </span>
+
+            <span class="s1">listPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">rowLabel</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s1">JScrollPane scrollPane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JScrollPane</span><span class="s2">(</span><span class="s1">listPanel</span><span class="s2">);</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">getViewport</span><span class="s2">().</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s4">//禁止横向滚动条出现，保留垂直滚动功能（像素隐身）</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setHorizontalScrollBarPolicy</span><span class="s2">(</span><span class="s1">ScrollPaneConstants</span><span class="s2">.</span><span class="s1">HORIZONTAL_SCROLLBAR_NEVER</span><span class="s2">);</span>
+
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">getVerticalScrollBar</span><span class="s2">().</span><span class="s1">setPreferredSize</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Dimension</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">));</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">getHorizontalScrollBar</span><span class="s2">().</span><span class="s1">setPreferredSize</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Dimension</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">)); </span>
+        <span class="s4">// ==========================================</span>
+
+        <span class="s0">return </span><span class="s1">scrollPane</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s4">// --- 更新 Tab 按钮样式的工具方法 ---</span>
+    <span class="s0">private void </span><span class="s1">updateTabStyles</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">[] </span><span class="s1">allTabs</span><span class="s2">, </span><span class="s1">JButton selectedTab</span><span class="s2">) {</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">JButton tab </span><span class="s2">: </span><span class="s1">allTabs</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">tab </span><span class="s2">== </span><span class="s1">selectedTab</span><span class="s2">) {</span>
+                <span class="s1">tab</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+                <span class="s1">tab</span><span class="s2">.</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">80</span><span class="s2">, </span><span class="s3">60</span><span class="s2">, </span><span class="s3">110</span><span class="s2">)); </span><span class="s4">// 选中色</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">tab</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">LIGHT_GRAY</span><span class="s2">);</span>
+                <span class="s1">tab</span><span class="s2">.</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">40</span><span class="s2">, </span><span class="s3">30</span><span class="s2">, </span><span class="s3">60</span><span class="s2">)); </span><span class="s4">// 未选中色</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">updateMyRankLabel</span><span class="s2">(</span><span class="s1">JLabel myRankLabel</span><span class="s2">, </span><span class="s0">int </span><span class="s1">rank</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">rank </span><span class="s2">&gt; </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s1">myRankLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;我的排名: &quot; </span><span class="s2">+ </span><span class="s1">rank</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s1">myRankLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;我的排名: --&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

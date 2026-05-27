@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>GameBoardPanel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GameBoardPanel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">GameBoardPanel </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">lineToDraw </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+    <span class="s0">private <a href="Cell.java.html">Cell</a> </span><span class="s1">cellInfo</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">GameBoardPanel</span><span class="s2">(<a href="Cell.java.html">Cell</a> </span><span class="s1">cellInfo</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">cellInfo </span><span class="s2">= </span><span class="s1">cellInfo</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span><span class="s3">// 因为你用 setBounds 绝对定位，所以必须关闭布局管理器</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// ==========================================</span>
+    <span class="s3">// 供外部调用的画线方法</span>
+    <span class="s3">// ==========================================</span>
+    <span class="s0">public void </span><span class="s1">showPath</span><span class="s2">(</span><span class="s1">Point start</span><span class="s2">, </span><span class="s1">Point end</span><span class="s2">) {</span>
+        <span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">path </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">path</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">start</span><span class="s2">);</span>
+        <span class="s1">path</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">end</span><span class="s2">);</span>
+        <span class="s1">executeDrawing</span><span class="s2">(</span><span class="s1">path</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// （如果你算出了1折或2折的坐标，可以继续在这里加 showPath 的重载方法，和之前说的一样）</span>
+
+    <span class="s0">private void </span><span class="s1">executeDrawing</span><span class="s2">(</span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">path</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">lineToDraw </span><span class="s2">= </span><span class="s1">path</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">(); </span><span class="s3">// 触发画线</span>
+
+        <span class="s1">Timer timer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s4">300</span><span class="s2">, </span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">lineToDraw </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">(); </span><span class="s3">// 300毫秒后线消失</span>
+        <span class="s2">});</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">setRepeats</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// ==========================================</span>
+    <span class="s3">// 核心重绘方法</span>
+    <span class="s3">// ==========================================</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">lineToDraw </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">lineToDraw</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() &gt;= </span><span class="s4">2 </span><span class="s2">&amp;&amp; </span><span class="s1">cellInfo </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">Graphics2D g2d </span><span class="s2">= (</span><span class="s1">Graphics2D</span><span class="s2">) </span><span class="s1">g</span><span class="s2">;</span>
+            <span class="s1">g2d</span><span class="s2">.</span><span class="s1">setColor</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">RED</span><span class="s2">);</span>
+            <span class="s1">g2d</span><span class="s2">.</span><span class="s1">setStroke</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BasicStroke</span><span class="s2">(</span><span class="s4">4.0f</span><span class="s2">, </span><span class="s1">BasicStroke</span><span class="s2">.</span><span class="s1">CAP_ROUND</span><span class="s2">, </span><span class="s1">BasicStroke</span><span class="s2">.</span><span class="s1">JOIN_ROUND</span><span class="s2">));</span>
+
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">lineToDraw</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() - </span><span class="s4">1</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+                <span class="s0">int </span><span class="s1">px1 </span><span class="s2">= </span><span class="s1">getPixelX</span><span class="s2">(</span><span class="s1">lineToDraw</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">));</span>
+                <span class="s0">int </span><span class="s1">py1 </span><span class="s2">= </span><span class="s1">getPixelY</span><span class="s2">(</span><span class="s1">lineToDraw</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">));</span>
+                <span class="s0">int </span><span class="s1">px2 </span><span class="s2">= </span><span class="s1">getPixelX</span><span class="s2">(</span><span class="s1">lineToDraw</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i </span><span class="s2">+ </span><span class="s4">1</span><span class="s2">));</span>
+                <span class="s0">int </span><span class="s1">py2 </span><span class="s2">= </span><span class="s1">getPixelY</span><span class="s2">(</span><span class="s1">lineToDraw</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i </span><span class="s2">+ </span><span class="s4">1</span><span class="s2">));</span>
+                <span class="s1">g2d</span><span class="s2">.</span><span class="s1">drawLine</span><span class="s2">(</span><span class="s1">px1</span><span class="s2">, </span><span class="s1">py1</span><span class="s2">, </span><span class="s1">px2</span><span class="s2">, </span><span class="s1">py2</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private int </span><span class="s1">getPixelX</span><span class="s2">(</span><span class="s1">Point p</span><span class="s2">) {</span>
+        <span class="s0">return </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getLeftbound</span><span class="s2">() + </span><span class="s1">p</span><span class="s2">.</span><span class="s1">y </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s4">2</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private int </span><span class="s1">getPixelY</span><span class="s2">(</span><span class="s1">Point p</span><span class="s2">) {</span>
+        <span class="s0">return </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getUpbound</span><span class="s2">() + </span><span class="s1">p</span><span class="s2">.</span><span class="s1">x </span><span class="s2">* </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() + </span><span class="s1">cellInfo</span><span class="s2">.</span><span class="s1">getEdgelength</span><span class="s2">() / </span><span class="s4">2</span><span class="s2">;</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

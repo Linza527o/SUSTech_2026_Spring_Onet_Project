@@ -1,0 +1,85 @@
+<html>
+<head>
+<title>ScoreCounter.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ScoreCounter.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+
+<span class="s0">public class </span><span class="s1">ScoreCounter </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+
+    <span class="s3">// 设为 private 保护组件，外部只能通过方法修改它</span>
+    <span class="s0">private </span><span class="s1">JButton accumulateButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">();</span>
+    <span class="s0">private int </span><span class="s1">accumulator </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+
+    <span class="s3">// 【核心修复】：构造函数，在创建这个类时只执行一次初始化</span>
+    <span class="s0">public </span><span class="s1">ScoreCounter</span><span class="s2">() {</span>
+        <span class="s3">// 1. 设置 ScoreCounter 面板自身透明，并且使用 BorderLayout 让内部按钮填满面板</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">());</span>
+
+        <span class="s3">// 2. 初始化按钮外观</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">));</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s3">// 3. 将按钮添加到当前这个 JPanel 上</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">accumulateButton</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s3">// 4. 【关键】：立刻显示初始分数（0分）</span>
+        <span class="s1">updateDisplay</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">resetAccumulator</span><span class="s2">() {</span>
+        <span class="s1">accumulator </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s1">updateDisplay</span><span class="s2">(); </span><span class="s3">// 重置后别忘了刷新显示</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">addScore</span><span class="s2">(</span><span class="s0">int </span><span class="s1">score</span><span class="s2">) {</span>
+        <span class="s1">accumulator </span><span class="s2">+= </span><span class="s1">score</span><span class="s2">;</span>
+        <span class="s1">updateDisplay</span><span class="s2">();</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;accumulator: &quot; </span><span class="s2">+ </span><span class="s1">accumulator</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setScore</span><span class="s2">(</span><span class="s0">int </span><span class="s1">score</span><span class="s2">) {</span>
+        <span class="s1">accumulator </span><span class="s2">= </span><span class="s1">score</span><span class="s2">;</span>
+        <span class="s1">updateDisplay</span><span class="s2">();</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;setscore: &quot; </span><span class="s2">+ </span><span class="s1">accumulator</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">JButton getAccumulator</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">accumulateButton</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public int </span><span class="s1">getScore</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">accumulator</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">// 内部方法：专门负责刷新按钮上的文字</span>
+    <span class="s0">private void </span><span class="s1">updateDisplay</span><span class="s2">(){</span>
+        <span class="s1">accumulateButton</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;得分：&quot; </span><span class="s2">+ </span><span class="s1">accumulator</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">();</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

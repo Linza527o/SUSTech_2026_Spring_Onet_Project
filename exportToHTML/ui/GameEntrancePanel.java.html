@@ -1,0 +1,143 @@
+<html>
+<head>
+<title>GameEntrancePanel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+.s6 { color: #5f826b; font-style: italic;}
+.s7 { color: #67a37c; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GameEntrancePanel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">SoundManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">MouseAdapter</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">GameEntrancePanel </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+
+    <span class="s0">private int </span><span class="s1">state </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s4">// 0: 播放开场动画, 1: 倒计时阶段</span>
+    
+    <span class="s4">// 动画序列参数</span>
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Image</span><span class="s2">&gt; </span><span class="s1">frames </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private int </span><span class="s1">currentFrame </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">frameDelay</span><span class="s2">;</span>
+    
+    <span class="s0">private int </span><span class="s1">triggerSFX</span><span class="s2">=</span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String sfxName</span><span class="s2">;</span>
+    <span class="s4">// 倒计时参数</span>
+    <span class="s0">private </span><span class="s1">String</span><span class="s2">[] </span><span class="s1">countdownTexts </span><span class="s2">= {</span><span class="s5">&quot;准备？&quot;</span><span class="s2">, </span><span class="s5">&quot;3&quot;</span><span class="s2">, </span><span class="s5">&quot;2&quot;</span><span class="s2">, </span><span class="s5">&quot;1&quot;</span><span class="s2">, </span><span class="s5">&quot;开 始 ！&quot;</span><span class="s2">};</span>
+    <span class="s0">private int </span><span class="s1">countdownIndex </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">JLabel textLabel</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">GameEntrancePanel</span><span class="s2">(</span><span class="s1">String imagePrefix</span><span class="s2">, </span><span class="s0">int </span><span class="s1">frameCount</span><span class="s2">, </span><span class="s0">int </span><span class="s1">delay</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">frameDelay </span><span class="s2">= </span><span class="s1">delay</span><span class="s2">;</span>
+        <span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s4">// 必须是透明的</span>
+        <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">GridBagLayout</span><span class="s2">()); </span><span class="s4">// 绝对居中布局</span>
+
+        <span class="s4">// 【核心】：吸收掉所有鼠标点击！只要这个面板还在，玩家点什么都没反应</span>
+        <span class="s1">addMouseListener</span><span class="s2">(</span><span class="s0">new </span><span class="s1">MouseAdapter</span><span class="s2">() {}); </span>
+
+        <span class="s4">// 1. 加载第二段开场动画帧 (比如: game_enter/E0.png ...)</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">frameCount</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s1">frames</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/&quot; </span><span class="s2">+ </span><span class="s1">imagePrefix </span><span class="s2">+ </span><span class="s1">i </span><span class="s2">+ </span><span class="s5">&quot;.png&quot;</span><span class="s2">).</span><span class="s1">getImage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+
+        <span class="s4">// 2. 初始化中间的巨大倒计时文字</span>
+        <span class="s1">textLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+        <span class="s1">textLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontTitle</span><span class="s2">); </span><span class="s4">// 标题大小</span>
+        <span class="s1">textLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);          </span><span class="s4">// 白色字体</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">textLabel</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s6">/**</span>
+     <span class="s6">* 呼叫开演！</span>
+     <span class="s6">* </span><span class="s7">@param </span><span class="s6">onGameStart 倒计时全部结束后，要执行的逻辑</span>
+     <span class="s6">*/</span>
+    <span class="s0">public void </span><span class="s1">playSequence</span><span class="s2">(</span><span class="s1">Runnable onGameStart</span><span class="s2">) {</span>
+        <span class="s1">state </span><span class="s2">= </span><span class="s3">0</span><span class="s2">; </span><span class="s4">// 阶段 0：先播动画</span>
+        
+        <span class="s1">Timer animTimer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s1">frameDelay</span><span class="s2">, </span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">animTimer</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">currentFrame</span><span class="s2">++;</span>
+            <span class="s0">if</span><span class="s2">(</span><span class="s1">triggerSFX</span><span class="s2">==</span><span class="s1">currentFrame</span><span class="s2">&amp;&amp;</span><span class="s1">sfxName</span><span class="s2">!=</span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s1">sfxName</span><span class="s2">);</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentFrame </span><span class="s2">&gt;= </span><span class="s1">frames</span><span class="s2">.</span><span class="s1">size</span><span class="s2">()) {</span>
+                <span class="s1">animTimer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+                <span class="s1">startCountdown</span><span class="s2">(</span><span class="s1">onGameStart</span><span class="s2">); </span><span class="s4">// 动画播完了，立刻无缝进入倒计时！</span>
+            <span class="s2">}</span>
+            <span class="s1">repaint</span><span class="s2">();</span>
+        <span class="s2">});</span>
+        <span class="s1">animTimer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s4">// 阶段 1：倒计时</span>
+    <span class="s0">private void </span><span class="s1">startCountdown</span><span class="s2">(</span><span class="s1">Runnable onGameStart</span><span class="s2">) {</span>
+        <span class="s1">state </span><span class="s2">= </span><span class="s3">1</span><span class="s2">; </span>
+        <span class="s1">textLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">countdownTexts</span><span class="s2">[</span><span class="s3">0</span><span class="s2">]); </span><span class="s4">// 出现 &quot;准备？&quot;</span>
+        <span class="s1">repaint</span><span class="s2">(); </span><span class="s4">// 刷新一下，画出半透明黑底</span>
+
+        <span class="s1">Timer countdownTimer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s3">800</span><span class="s2">, </span><span class="s0">null</span><span class="s2">); </span><span class="s4">// 每 0.8秒 跳一个字</span>
+        <span class="s1">countdownTimer</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">countdownIndex</span><span class="s2">++;</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">countdownIndex </span><span class="s2">&lt; </span><span class="s1">countdownTexts</span><span class="s2">.</span><span class="s1">length</span><span class="s2">) {</span>
+                <span class="s1">textLabel</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">countdownTexts</span><span class="s2">[</span><span class="s1">countdownIndex</span><span class="s2">]);</span>
+                
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s4">// 倒计时全部结束！</span>
+                <span class="s1">countdownTimer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">onGameStart </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                    <span class="s1">onGameStart</span><span class="s2">.</span><span class="s1">run</span><span class="s2">(); </span><span class="s4">// 执行开始游戏的指令！</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+        <span class="s1">countdownTimer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s4">// ==========================================</span>
+    <span class="s4">// 直接跳过幕布动画，只播放倒计时</span>
+    <span class="s0">public void </span><span class="s1">playCountdownOnly</span><span class="s2">(</span><span class="s1">Runnable onGameStart</span><span class="s2">) {</span>
+        <span class="s4">// 直接进入状态 1 (半透明黑屏)，并调用倒计时逻辑</span>
+        <span class="s1">startCountdown</span><span class="s2">(</span><span class="s1">onGameStart</span><span class="s2">); </span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">applySFX</span><span class="s2">(</span><span class="s0">int </span><span class="s1">startcount</span><span class="s2">,</span><span class="s1">String sfxName</span><span class="s2">) {</span>
+        <span class="s1">triggerSFX</span><span class="s2">=</span><span class="s1">startcount</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">sfxName</span><span class="s2">=</span><span class="s1">sfxName</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">Graphics g</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">paintComponent</span><span class="s2">(</span><span class="s1">g</span><span class="s2">);</span>
+        
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">state </span><span class="s2">== </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s4">// 阶段0：绘制开场序列帧动画</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentFrame </span><span class="s2">&lt; </span><span class="s1">frames</span><span class="s2">.</span><span class="s1">size</span><span class="s2">()) {</span>
+                <span class="s1">g</span><span class="s2">.</span><span class="s1">drawImage</span><span class="s2">(</span><span class="s1">frames</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentFrame</span><span class="s2">), </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">getWidth</span><span class="s2">(), </span><span class="s1">getHeight</span><span class="s2">(), </span><span class="s0">this</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">state </span><span class="s2">== </span><span class="s3">1</span><span class="s2">) {</span>
+            <span class="s4">// 阶段1：画一层半透明的黑色遮罩，烘托倒计时的紧张感</span>
+            <span class="s1">Graphics2D g2d </span><span class="s2">= (</span><span class="s1">Graphics2D</span><span class="s2">) </span><span class="s1">g</span><span class="s2">;</span>
+            <span class="s1">g2d</span><span class="s2">.</span><span class="s1">setColor</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">150</span><span class="s2">));</span>
+            <span class="s1">g2d</span><span class="s2">.</span><span class="s1">fillRect</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">getWidth</span><span class="s2">(), </span><span class="s1">getHeight</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

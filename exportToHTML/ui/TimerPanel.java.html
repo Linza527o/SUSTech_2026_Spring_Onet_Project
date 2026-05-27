@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>TimerPanel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+TimerPanel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+
+<span class="s0">public class </span><span class="s1">TimerPanel </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">JButton timeButton</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Timer timer</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">secondsPassed </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+
+
+
+    <span class="s0">public </span><span class="s1">TimerPanel</span><span class="s2">(</span><span class="s1">String bgImagePath</span><span class="s2">) {</span>
+        <span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">());</span>
+
+        <span class="s4">// 读取背景图片</span>
+
+
+        <span class="s4">// 初始化 JButton，同时传入初始文字和图标</span>
+        <span class="s1">timeButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;时间: 00:00&quot;</span><span class="s2">);</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">));</span>
+
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">1030</span><span class="s2">, </span><span class="s3">230</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">timeButton</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s4">// 创建一个每 1000 毫秒（1秒）触发一次的定时器</span>
+        <span class="s1">timer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s3">1000</span><span class="s2">, </span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">secondsPassed</span><span class="s2">++;</span>
+            <span class="s1">updateDisplay</span><span class="s2">();</span>
+        <span class="s2">});</span>
+    <span class="s2">}</span>
+    <span class="s0">public </span><span class="s1">JButton getTimeButton</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">timeButton</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s4">// 格式化时间并更新显示</span>
+    <span class="s0">private void </span><span class="s1">updateDisplay</span><span class="s2">() {</span>
+        <span class="s0">int </span><span class="s1">minutes </span><span class="s2">= </span><span class="s1">secondsPassed </span><span class="s2">/ </span><span class="s3">60</span><span class="s2">;</span>
+        <span class="s0">int </span><span class="s1">seconds </span><span class="s2">= </span><span class="s1">secondsPassed </span><span class="s2">% </span><span class="s3">60</span><span class="s2">;</span>
+        <span class="s4">// 【修改】更新 timeButton 的文字</span>
+        <span class="s1">timeButton</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s5">&quot;时间: %02d:%02d&quot;</span><span class="s2">, </span><span class="s1">minutes</span><span class="s2">, </span><span class="s1">seconds</span><span class="s2">));</span>
+    <span class="s2">}</span>
+
+    <span class="s4">// ========== 供外部调用的控制方法 ==========</span>
+
+    <span class="s0">public void </span><span class="s1">startTimer</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">timer</span><span class="s2">.</span><span class="s1">isRunning</span><span class="s2">()) {</span>
+            <span class="s1">timer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">stopTimer</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">timer</span><span class="s2">.</span><span class="s1">isRunning</span><span class="s2">()) {</span>
+            <span class="s1">timer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">resetTimer</span><span class="s2">() {</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+        <span class="s1">secondsPassed </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s1">updateDisplay</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public int </span><span class="s1">getSecondsPassed</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">secondsPassed</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">setSecondsPasses</span><span class="s2">(</span><span class="s0">int </span><span class="s1">seconds</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">secondsPassed</span><span class="s2">=</span><span class="s1">seconds</span><span class="s2">;</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

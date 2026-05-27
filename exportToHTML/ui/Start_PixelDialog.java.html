@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Start_PixelDialog.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #5f826b; font-style: italic;}
+.s4 { color: #67a37c; font-style: italic;}
+.s5 { color: #7a7e85;}
+.s6 { color: #2aacb8;}
+.s7 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Start_PixelDialog.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">SoundManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">MouseAdapter</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">MouseEvent</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">MouseMotionAdapter</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">Start_PixelDialog </span><span class="s0">extends </span><span class="s1">JDialog </span><span class="s2">{</span>
+
+    <span class="s0">private int </span><span class="s1">mouseX</span><span class="s2">, </span><span class="s1">mouseY</span><span class="s2">;</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* 自定义像素风弹窗</span>
+     <span class="s3">* </span><span class="s4">@param </span><span class="s3">parent  依附的父窗口（LoginFrame 或 RegisterFrame）</span>
+     <span class="s3">* </span><span class="s4">@param </span><span class="s3">message 要提示的文字内容</span>
+     <span class="s3">*/</span>
+    <span class="s0">public </span><span class="s1">Start_PixelDialog</span><span class="s2">(</span><span class="s1">JFrame parent</span><span class="s2">, </span><span class="s1">String message</span><span class="s2">) {</span>
+        <span class="s5">// super(parent, true) 这里的 true 表示它是“模态”的（阻塞父窗口）</span>
+        <span class="s0">super</span><span class="s2">(</span><span class="s1">parent</span><span class="s2">, </span><span class="s0">true</span><span class="s2">); </span>
+
+        <span class="s1">setSize</span><span class="s2">(</span><span class="s6">400</span><span class="s2">, </span><span class="s6">200</span><span class="s2">);</span>
+        <span class="s1">setUndecorated</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span><span class="s5">// 去除系统边框</span>
+        <span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s1">parent</span><span class="s2">); </span><span class="s5">// 在父窗口正中间弹出</span>
+        <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">getContentPane</span><span class="s2">().</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s6">40</span><span class="s2">, </span><span class="s6">40</span><span class="s2">, </span><span class="s6">40</span><span class="s2">)); </span><span class="s5">// 深色背景</span>
+
+        <span class="s5">// 给弹窗加一个白色的像素边框，看起来更像复古游戏的对话框</span>
+        <span class="s2">((</span><span class="s1">JPanel</span><span class="s2">) </span><span class="s1">getContentPane</span><span class="s2">()).</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s1">BorderFactory</span><span class="s2">.</span><span class="s1">createLineBorder</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">, </span><span class="s6">3</span><span class="s2">));</span>
+
+        <span class="s5">// === 实现拖拽功能 ===</span>
+        <span class="s1">addMouseListener</span><span class="s2">(</span><span class="s0">new </span><span class="s1">MouseAdapter</span><span class="s2">() {</span>
+            <span class="s0">public void </span><span class="s1">mousePressed</span><span class="s2">(</span><span class="s1">MouseEvent e</span><span class="s2">) {</span>
+                <span class="s1">mouseX </span><span class="s2">= </span><span class="s1">e</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">();</span>
+                <span class="s1">mouseY </span><span class="s2">= </span><span class="s1">e</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">();</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+        <span class="s1">addMouseMotionListener</span><span class="s2">(</span><span class="s0">new </span><span class="s1">MouseMotionAdapter</span><span class="s2">() {</span>
+            <span class="s0">public void </span><span class="s1">mouseDragged</span><span class="s2">(</span><span class="s1">MouseEvent e</span><span class="s2">) {</span>
+                <span class="s1">setLocation</span><span class="s2">(</span><span class="s1">getLocation</span><span class="s2">().</span><span class="s1">x </span><span class="s2">+ </span><span class="s1">e</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() - </span><span class="s1">mouseX</span><span class="s2">, </span><span class="s1">getLocation</span><span class="s2">().</span><span class="s1">y </span><span class="s2">+ </span><span class="s1">e</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">() - </span><span class="s1">mouseY</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s5">// === 提示文字 ===</span>
+        <span class="s5">// 使用 HTML 标签让文字可以自动换行，并且居中对齐</span>
+        <span class="s1">JLabel msgLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s7">&quot;&lt;html&gt;&lt;div style='text-align: center;'&gt;&quot; </span><span class="s2">+ </span><span class="s1">message </span><span class="s2">+ </span><span class="s7">&quot;&lt;/div&gt;&lt;/html&gt;&quot;</span><span class="s2">, </span><span class="s1">SwingConstants</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">msgLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+        <span class="s1">msgLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">msgLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s6">20</span><span class="s2">, </span><span class="s6">40</span><span class="s2">, </span><span class="s6">360</span><span class="s2">, </span><span class="s6">60</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">msgLabel</span><span class="s2">);</span>
+
+        <span class="s5">// === 确定按钮 ===</span>
+        <span class="s1">JButton okBtn </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s7">&quot;确 定&quot;</span><span class="s2">);</span>
+        <span class="s1">okBtn</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+         <span class="s5">// 等你画好图后，在这里替换背景图：</span>
+         <span class="s5">// okBtn.setIcon(new ImageIcon(&quot;resource/btn_ok.png&quot;));</span>
+         <span class="s5">// okBtn.setPressedIcon(new ImageIcon(&quot;resource/btn_ok_pressed.png&quot;));</span>
+        <span class="s1">okBtn</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s6">140</span><span class="s2">, </span><span class="s6">120</span><span class="s2">, </span><span class="s6">120</span><span class="s2">, </span><span class="s6">40</span><span class="s2">);</span>
+        <span class="s1">okBtn</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s5">// 点击确定按钮，关闭这个弹窗</span>
+        <span class="s1">okBtn</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s7">&quot;mouse&quot;</span><span class="s2">);</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">();</span>
+        <span class="s2">});</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">okBtn</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<html>
+<head>
+<title>MapFrame.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MapFrame.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">manager</span><span class="s2">.</span><span class="s1">AccountInfo</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">SoundManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">TransitionManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+
+<span class="s0">public class </span><span class="s1">MapFrame </span><span class="s0">extends </span><span class="s1">JFrame </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">AccountInfo currentUser</span><span class="s2">;</span>
+    <span class="s0">int </span><span class="s1">selectMode </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">MapFrame</span><span class="s2">(</span><span class="s1">AccountInfo currentUser</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">currentUser </span><span class="s2">= </span><span class="s1">currentUser</span><span class="s2">;</span>
+
+        <span class="s4">// 1. 基础设置：1280x720，无边框，居中</span>
+        <span class="s1">setSize</span><span class="s2">(</span><span class="s3">1280</span><span class="s2">, </span><span class="s3">720</span><span class="s2">);</span>
+        <span class="s1">setUndecorated</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span>
+
+        <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playBGM</span><span class="s2">(</span><span class="s5">&quot;resource/music/map_bgm.wav&quot;</span><span class="s2">);</span>
+
+        <span class="s4">// 2. 创建动画背景 (4帧动图，main_bg_1 到 main_bg_4)</span>
+        <a href="AnimatedBackgroundPanel.java.html">AnimatedBackgroundPanel</a> <span class="s1">bgPanel </span><span class="s2">= </span><span class="s0">new <a href="AnimatedBackgroundPanel.java.html">AnimatedBackgroundPanel</a></span><span class="s2">(</span><span class="s5">&quot;main_bg&quot;</span><span class="s2">, </span><span class="s3">4</span><span class="s2">, </span><span class="s3">800</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setContentPane</span><span class="s2">(</span><span class="s1">bgPanel</span><span class="s2">); </span>
+        
+        <span class="s1">initComponents</span><span class="s2">(</span><span class="s1">bgPanel</span><span class="s2">); </span>
+    <span class="s2">}</span>
+    
+    <span class="s0">public void </span><span class="s1">initComponents</span><span class="s2">(<a href="AnimatedBackgroundPanel.java.html">AnimatedBackgroundPanel</a> </span><span class="s1">bgPanel</span><span class="s2">) {</span>
+        <span class="s1">ImageIcon btnBg </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/btn_bg.png&quot;</span><span class="s2">);</span>
+        
+        <span class="s4">// 按钮统一的 X 坐标 (偏右侧，不挡住左边的星球)</span>
+        <span class="s0">int </span><span class="s1">btnX </span><span class="s2">= </span><span class="s3">850</span><span class="s2">; </span>
+
+        <span class="s1">JButton repairButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;修理飞船&quot;</span><span class="s2">);</span>
+        <span class="s1">styleButton</span><span class="s2">(</span><span class="s1">repairButton</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">);</span>
+        <span class="s1">repairButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s1">btnX</span><span class="s2">, </span><span class="s3">320</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconWidth</span><span class="s2">(), </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconHeight</span><span class="s2">());</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">repairButton</span><span class="s2">);</span>
+
+        <span class="s1">JButton GravityMode </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;重力模式&quot;</span><span class="s2">);</span>
+        <span class="s1">styleButton</span><span class="s2">(</span><span class="s1">GravityMode</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">);</span>
+        <span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s1">btnX</span><span class="s2">, </span><span class="s3">400</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconWidth</span><span class="s2">(), </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconHeight</span><span class="s2">());</span>
+        <span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">setEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span><span class="s4">//</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">GravityMode</span><span class="s2">);</span>
+
+        <span class="s1">JButton backButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;返回菜单&quot;</span><span class="s2">);</span>
+        <span class="s1">styleButton</span><span class="s2">(</span><span class="s1">backButton</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">);</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s1">btnX</span><span class="s2">, </span><span class="s3">560</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconWidth</span><span class="s2">(), </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconHeight</span><span class="s2">());</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">backButton</span><span class="s2">);</span>
+
+        <span class="s1">JButton modeButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">((</span><span class="s1">selectMode </span><span class="s2">== </span><span class="s3">0</span><span class="s2">? </span><span class="s5">&quot;简单&quot; </span><span class="s2">: </span><span class="s5">&quot;困难&quot;</span><span class="s2">) + </span><span class="s5">&quot;模式&quot;</span><span class="s2">);</span>
+        <span class="s1">styleButton</span><span class="s2">(</span><span class="s1">modeButton</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">);</span>
+        <span class="s1">modeButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s1">btnX</span><span class="s2">, </span><span class="s3">480</span><span class="s2">, </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconWidth</span><span class="s2">(), </span><span class="s1">btnBg</span><span class="s2">.</span><span class="s1">getIconHeight</span><span class="s2">());</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">modeButton</span><span class="s2">);</span>
+
+        <span class="s4">// ==========================================</span>
+        <span class="s4">// 交互逻辑</span>
+        <span class="s4">// ==========================================</span>
+        
+        <span class="s4">// 点击“修理飞船” -&gt; 去下棋消除</span>
+        <span class="s1">repairButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">fadeOutBGM</span><span class="s2">(</span><span class="s3">500</span><span class="s2">); </span><span class="s4">// 渐隐当前BGM</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+
+            <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">stopAnimation</span><span class="s2">();</span>
+    
+            <span class="s4">// 3. 按钮飞出动画 (每 20 毫秒向右移动 30 像素)</span>
+            <span class="s1">Timer flyOutTimer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s3">20</span><span class="s2">, </span><span class="s0">null</span><span class="s2">);</span>
+            <span class="s1">flyOutTimer</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+  
+                <span class="s1">repairButton</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">repairButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">, </span><span class="s1">repairButton</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+                <span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">, </span><span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+                <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">backButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">, </span><span class="s1">backButton</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+                <span class="s1">modeButton</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">modeButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">,</span><span class="s1">modeButton</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+            
+            <span class="s4">// 当按钮彻底飞出屏幕右侧时 (假设屏幕宽1280)</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">repairButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() &gt; </span><span class="s3">1280</span><span class="s2">) {</span>
+                    <span class="s1">flyOutTimer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">(); </span><span class="s4">// 停止飞行</span>
+                <span class="s2">}</span>
+            <span class="s2">});</span>
+            <span class="s1">flyOutTimer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">(); </span><span class="s4">// 启动飞行动画</span>
+                <span class="s4">// 1. 创建 png 转场动画</span>
+                <a href="OneShotAnimationPanel.java.html">OneShotAnimationPanel</a> <span class="s1">mapToGame </span><span class="s2">= </span><span class="s0">new <a href="OneShotAnimationPanel.java.html">OneShotAnimationPanel</a></span><span class="s2">(</span><span class="s5">&quot;map_exit/F&quot;</span><span class="s2">, </span><span class="s3">33</span><span class="s2">, </span><span class="s3">80</span><span class="s2">); </span><span class="s4">// 建议设为 80ms，稍微流畅一点</span>
+                <span class="s1">mapToGame</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">1280</span><span class="s2">, </span><span class="s3">720</span><span class="s2">);</span>
+                <span class="s1">mapToGame</span><span class="s2">.</span><span class="s1">applySFX</span><span class="s2">(</span><span class="s3">22</span><span class="s2">, </span><span class="s5">&quot;descend&quot;</span><span class="s2">); </span><span class="s4">// 在第 25 帧（大约还剩 8 帧全黑）时播放音效</span>
+                <span class="s4">// 必须把动画画板添加到当前窗口的最顶层！</span>
+                <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">mapToGame</span><span class="s2">);</span>
+                <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">setComponentZOrder</span><span class="s2">(</span><span class="s1">mapToGame</span><span class="s2">, </span><span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">getComponentCount</span><span class="s2">() - </span><span class="s3">1</span><span class="s2">); </span><span class="s4">// 让动画面板在最底层</span>
+
+            <span class="s4">// 2. 开始播放动画</span>
+            <span class="s1">mapToGame</span><span class="s2">.</span><span class="s1">play</span><span class="s2">(() </span><span class="s1">-&gt; </span><span class="s2">{</span>
+                <span class="s4">// 这个大括号里的代码，会严格等到第 33 帧播完，屏幕全黑时才执行！</span>
+                
+                <span class="s4">// 打开新界面</span>
+                <a href="GameFrame.java.html">GameFrame</a> <span class="s1">gameFrame </span><span class="s2">= </span><span class="s0">new <a href="GameFrame.java.html">GameFrame</a></span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">,</span><span class="s0">true</span><span class="s2">,</span><span class="s0">false</span><span class="s2">, </span><span class="s1">selectMode</span><span class="s2">);</span>
+                <span class="s1">gameFrame</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s4">//延迟关闭界面</span>
+                <span class="s1">Timer delayCloseTimer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s3">300</span><span class="s2">, </span><span class="s1">ev -&gt; </span><span class="s2">{</span>
+                    <span class="s0">this</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">(); </span><span class="s4">// 关闭当前界面</span>
+                <span class="s2">});</span>
+                <span class="s1">delayCloseTimer</span><span class="s2">.</span><span class="s1">setRepeats</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s4">// 只执行一次</span>
+                <span class="s1">delayCloseTimer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+            <span class="s2">});</span>
+        <span class="s2">});</span>
+        
+        <span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">fadeOutBGM</span><span class="s2">(</span><span class="s3">500</span><span class="s2">); </span><span class="s4">// 渐隐当前BGM</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+
+            <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">stopAnimation</span><span class="s2">();</span>
+
+            <span class="s4">// 3. 按钮飞出动画 (每 20 毫秒向右移动 30 像素)</span>
+            <span class="s1">Timer flyOutTimer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s3">20</span><span class="s2">, </span><span class="s0">null</span><span class="s2">);</span>
+            <span class="s1">flyOutTimer</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+                <span class="s4">// 让三个按钮一起往右飞</span>
+                <span class="s1">repairButton</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">repairButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">, </span><span class="s1">repairButton</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+                <span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">, </span><span class="s1">GravityMode</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+                <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">backButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">, </span><span class="s1">backButton</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+                <span class="s1">modeButton</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">modeButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s3">30</span><span class="s2">,</span><span class="s1">modeButton</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">());</span>
+
+
+                <span class="s4">// 当按钮彻底飞出屏幕右侧时 (假设屏幕宽1280)</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">repairButton</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() &gt; </span><span class="s3">1280</span><span class="s2">) {</span>
+                    <span class="s1">flyOutTimer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">(); </span><span class="s4">// 停止飞行</span>
+                <span class="s2">}</span>
+            <span class="s2">});</span>
+            <span class="s1">flyOutTimer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">(); </span><span class="s4">// 启动飞行动画</span>
+            <span class="s4">// 1. 创建 png 转场动画</span>
+            <a href="OneShotAnimationPanel.java.html">OneShotAnimationPanel</a> <span class="s1">mapToGame </span><span class="s2">= </span><span class="s0">new <a href="OneShotAnimationPanel.java.html">OneShotAnimationPanel</a></span><span class="s2">(</span><span class="s5">&quot;map_exit/F&quot;</span><span class="s2">, </span><span class="s3">33</span><span class="s2">, </span><span class="s3">80</span><span class="s2">); </span><span class="s4">// 建议设为 80ms，稍微流畅一点</span>
+            <span class="s1">mapToGame</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">1280</span><span class="s2">, </span><span class="s3">720</span><span class="s2">);</span>
+            <span class="s1">mapToGame</span><span class="s2">.</span><span class="s1">applySFX</span><span class="s2">(</span><span class="s3">22</span><span class="s2">, </span><span class="s5">&quot;descend&quot;</span><span class="s2">); </span><span class="s4">// 在第 25 帧（大约还剩 8 帧全黑）时播放音效</span>
+            <span class="s4">// 必须把动画画板添加到当前窗口的最顶层！</span>
+            <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">mapToGame</span><span class="s2">);</span>
+            <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">setComponentZOrder</span><span class="s2">(</span><span class="s1">mapToGame</span><span class="s2">, </span><span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">getComponentCount</span><span class="s2">() - </span><span class="s3">1</span><span class="s2">); </span><span class="s4">// 让动画面板在最底层</span>
+
+            <span class="s4">// 2. 开始播放动画</span>
+            <span class="s1">mapToGame</span><span class="s2">.</span><span class="s1">play</span><span class="s2">(() </span><span class="s1">-&gt; </span><span class="s2">{</span>
+                <span class="s4">// 这个大括号里的代码，会严格等到第 33 帧播完，屏幕全黑时才执行！</span>
+
+                <span class="s4">// 打开新界面</span>
+                <a href="GameFrame.java.html">GameFrame</a> <span class="s1">gameFrame </span><span class="s2">= </span><span class="s0">new <a href="GameFrame.java.html">GameFrame</a></span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">,</span><span class="s0">true</span><span class="s2">,</span><span class="s0">true</span><span class="s2">, </span><span class="s1">selectMode</span><span class="s2">);</span>
+
+                <span class="s1">gameFrame</span><span class="s2">.</span><span class="s1">setApplyGravity</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s1">gameFrame</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;已设置为重力模式&quot;</span><span class="s2">);</span>
+                <span class="s4">//延迟关闭界面</span>
+                <span class="s1">Timer delayCloseTimer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s3">300</span><span class="s2">, </span><span class="s1">ev -&gt; </span><span class="s2">{</span>
+                    <span class="s0">this</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">(); </span><span class="s4">// 关闭当前界面</span>
+                <span class="s2">});</span>
+                <span class="s1">delayCloseTimer</span><span class="s2">.</span><span class="s1">setRepeats</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s4">// 只执行一次</span>
+                <span class="s1">delayCloseTimer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+            <span class="s2">});</span>
+        <span class="s2">});</span>
+
+        <span class="s1">modeButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt;</span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+            <span class="s0">boolean </span><span class="s1">modeSwitch </span><span class="s2">= <a href="PixelDialog_Yes_No.java.html">PixelDialog_Yes_No</a>.</span><span class="s1">showDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s5">&quot;确定要把难度切换为&quot; </span><span class="s2">+ (</span><span class="s1">selectMode </span><span class="s2">== </span><span class="s3">0</span><span class="s2">? </span><span class="s5">&quot;困难&quot; </span><span class="s2">: </span><span class="s5">&quot;简单&quot;</span><span class="s2">) + </span><span class="s5">&quot;吗？&quot;</span><span class="s2">, </span><span class="s0">null</span><span class="s2">);</span>
+            <span class="s0">if</span><span class="s2">(</span><span class="s1">modeSwitch</span><span class="s2">){</span>
+                <span class="s1">selectMode </span><span class="s2">= (</span><span class="s1">selectMode </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">) % </span><span class="s3">2</span><span class="s2">;</span>
+                <span class="s1">modeButton</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">((</span><span class="s1">selectMode </span><span class="s2">== </span><span class="s3">0</span><span class="s2">? </span><span class="s5">&quot;简单&quot;</span><span class="s2">:</span><span class="s5">&quot;困难&quot;</span><span class="s2">) + </span><span class="s5">&quot;模式&quot;</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s4">// 点击“返回菜单” -&gt; 回到 InitialFrame 主菜单</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+            <span class="s1">TransitionManager</span><span class="s2">.</span><span class="s1">fadeOutAndSwitch</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s3">1000</span><span class="s2">, () </span><span class="s1">-&gt; </span><span class="s2">{</span>
+                <a href="InitialFrame.java.html">InitialFrame</a> <span class="s1">initialFrame </span><span class="s2">= </span><span class="s0">new <a href="InitialFrame.java.html">InitialFrame</a></span><span class="s2">(</span><span class="s1">currentUser</span><span class="s2">);</span>
+                <span class="s1">TransitionManager</span><span class="s2">.</span><span class="s1">fadeIn</span><span class="s2">(</span><span class="s1">initialFrame</span><span class="s2">, </span><span class="s3">1000</span><span class="s2">); </span><span class="s4">// 新界面淡入</span>
+                <span class="s1">initialFrame</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+            <span class="s2">});</span>
+        <span class="s2">});</span>
+    <span class="s2">}</span>
+
+    <span class="s4">// --- 统一设置像素按钮外观的工具方法 ---</span>
+    <span class="s0">private void </span><span class="s1">styleButton</span><span class="s2">(</span><span class="s1">JButton btn</span><span class="s2">, </span><span class="s1">ImageIcon bgIcon</span><span class="s2">) {</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s1">bgIcon</span><span class="s2">);</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">btn</span><span class="s2">.</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

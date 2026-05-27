@@ -1,0 +1,187 @@
+<html>
+<head>
+<title>Cell.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Cell.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">ActionListener</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.</span><span class="s1">event</span><span class="s2">.</span><span class="s1">ActionEvent</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">Cell </span><span class="s2">{</span>
+    <span class="s0">private int </span><span class="s1">leftbound</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">upbound</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">edgelength</span><span class="s2">;</span>
+
+    <span class="s3">// 【新增】用来存储当前需要画的线段</span>
+    <span class="s0">public </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">lineToDraw </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">Cell</span><span class="s2">(</span><span class="s0">int </span><span class="s1">lb</span><span class="s2">, </span><span class="s0">int </span><span class="s1">ub</span><span class="s2">, </span><span class="s0">int </span><span class="s1">ed</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">leftbound </span><span class="s2">= </span><span class="s1">lb</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">upbound </span><span class="s2">= </span><span class="s1">ub</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">edgelength </span><span class="s2">= </span><span class="s1">ed</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">JButton</span><span class="s2">[][] </span><span class="s1">cellArrays</span><span class="s2">(</span><span class="s0">int</span><span class="s2">[][] </span><span class="s1">map</span><span class="s2">) {</span>
+        <span class="s1">JButton</span><span class="s2">[][] </span><span class="s1">buttons </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">[</span><span class="s1">map</span><span class="s2">.</span><span class="s1">length</span><span class="s2">][</span><span class="s1">map</span><span class="s2">[</span><span class="s4">0</span><span class="s2">].</span><span class="s1">length</span><span class="s2">];</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">map</span><span class="s2">.</span><span class="s1">length</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">map</span><span class="s2">[</span><span class="s4">0</span><span class="s2">].</span><span class="s1">length</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] = </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;&quot; </span><span class="s2">+ </span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">]);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setContentAreaFilled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setBorderPainted</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setFocusPainted</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/icons/ic&quot; </span><span class="s2">+ </span><span class="s1">map</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">] + </span><span class="s5">&quot;.png&quot;</span><span class="s2">));</span>
+<span class="s3">//                System.out.println(&quot;放置一个棋子&quot;);</span>
+                <span class="s0">int </span><span class="s1">x </span><span class="s2">= </span><span class="s1">leftbound </span><span class="s2">+ </span><span class="s1">j </span><span class="s2">* </span><span class="s1">edgelength</span><span class="s2">;</span>
+                <span class="s0">int </span><span class="s1">y </span><span class="s2">= </span><span class="s1">upbound </span><span class="s2">+ </span><span class="s1">i </span><span class="s2">* </span><span class="s1">edgelength</span><span class="s2">;</span>
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s1">x</span><span class="s2">, </span><span class="s1">y</span><span class="s2">, </span><span class="s1">edgelength</span><span class="s2">, </span><span class="s1">edgelength</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">buttons</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">showPathAndClear</span><span class="s2">(</span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">path</span><span class="s2">, </span><span class="s1">JButton btn1</span><span class="s2">, </span><span class="s1">JButton btn2</span><span class="s2">, </span><span class="s1">JPanel panel</span><span class="s2">) {</span>
+        <span class="s3">// 步骤A：把路径记到自己的本子上</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">lineToDraw </span><span class="s2">= </span><span class="s1">path</span><span class="s2">;</span>
+
+        <span class="s3">// 步骤B：命令面板重绘（这会让面板去读 lineToDraw 然后画出红线）</span>
+        <span class="s1">panel</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">();</span>
+
+        <span class="s3">// 步骤C：设一个 300 毫秒的定时器</span>
+        <span class="s1">Timer timer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s4">300</span><span class="s2">, </span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">lineToDraw </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;  </span><span class="s3">// 擦掉本子上的路径</span>
+
+            <span class="s1">btn1</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);  </span><span class="s3">// 隐藏按下的第一个方块</span>
+            <span class="s1">btn2</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);  </span><span class="s3">// 隐藏按下的第二个方块</span>
+
+            <span class="s1">panel</span><span class="s2">.</span><span class="s1">repaint</span><span class="s2">();         </span><span class="s3">// 再次命令面板重绘（因为路径是 null 了，线就消失了）</span>
+        <span class="s2">});</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">setRepeats</span><span class="s2">(</span><span class="s0">false</span><span class="s2">); </span><span class="s3">// 只执行一次</span>
+        <span class="s1">timer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+    <span class="s3">// 注意：第三个参数改成了 BackgroundPanel</span>
+    <span class="s0">public void </span><span class="s1">setCellsFunction</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">[][] </span><span class="s1">buttons</span><span class="s2">, <a href="ChessBoard.java.html">ChessBoard</a> </span><span class="s1">main</span><span class="s2">, <a href="BackgroundPanel.java.html">BackgroundPanel</a> </span><span class="s1">panel</span><span class="s2">, </span><span class="s1">ActionListener victoryListener</span><span class="s2">, </span><span class="s0">boolean </span><span class="s1">applygrav</span><span class="s2">) {</span>
+        <span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Integer</span><span class="s2">&gt; </span><span class="s1">tmpX </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Integer</span><span class="s2">&gt; </span><span class="s1">tmpY </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">buttons</span><span class="s2">.</span><span class="s1">length</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">j </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">j </span><span class="s2">&lt; </span><span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">].</span><span class="s1">length</span><span class="s2">; </span><span class="s1">j</span><span class="s2">++) {</span>
+                <span class="s1">panel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">]);</span>
+
+                <span class="s3">//隐藏消除的格子</span>
+                <span class="s0">if</span><span class="s2">(</span><span class="s1">main</span><span class="s2">.</span><span class="s1">getMap</span><span class="s2">()[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">]==</span><span class="s4">0</span><span class="s2">){</span>
+                    <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+                <span class="s2">}</span>
+                <span class="s0">else</span><span class="s2">{</span>
+                    <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s2">}</span>
+
+                <span class="s0">final int </span><span class="s1">finalI </span><span class="s2">= </span><span class="s1">i</span><span class="s2">;</span>
+                <span class="s0">final int </span><span class="s1">finalJ </span><span class="s2">= </span><span class="s1">j</span><span class="s2">;</span>
+
+                <span class="s1">buttons</span><span class="s2">[</span><span class="s1">i</span><span class="s2">][</span><span class="s1">j</span><span class="s2">].</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">ch -&gt; </span><span class="s2">{</span>
+                    <span class="s1">buttons</span><span class="s2">[</span><span class="s1">finalI</span><span class="s2">][</span><span class="s1">finalJ</span><span class="s2">].</span><span class="s1">setEnabled</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+                    <span class="s1">tmpX</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">finalI</span><span class="s2">);</span>
+                    <span class="s1">tmpY</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">finalJ</span><span class="s2">);</span>
+
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">tmpX</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() == </span><span class="s4">2</span><span class="s2">) {</span>
+                        <span class="s0">int </span><span class="s1">x1 </span><span class="s2">= </span><span class="s1">tmpX</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s4">0</span><span class="s2">);</span>
+                        <span class="s0">int </span><span class="s1">y1 </span><span class="s2">= </span><span class="s1">tmpY</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s4">0</span><span class="s2">);</span>
+                        <span class="s0">int </span><span class="s1">x2 </span><span class="s2">= </span><span class="s1">tmpX</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s4">1</span><span class="s2">);</span>
+                        <span class="s0">int </span><span class="s1">y2 </span><span class="s2">= </span><span class="s1">tmpY</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s4">1</span><span class="s2">);</span>
+                        <span class="s0">int </span><span class="s1">tmpIconOrder </span><span class="s2">= </span><span class="s1">main</span><span class="s2">.</span><span class="s1">getMap</span><span class="s2">()[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">];</span>
+
+                        <span class="s0">if </span><span class="s2">(</span><span class="s1">main</span><span class="s2">.</span><span class="s1">isValidConnection</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">) &amp;&amp; </span><span class="s1">applygrav </span><span class="s2">== </span><span class="s0">false</span><span class="s2">) {</span>
+                            <span class="s1">main</span><span class="s2">.</span><span class="s1">cellElimination</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">,</span><span class="s1">y1</span><span class="s2">,</span><span class="s1">x2</span><span class="s2">,</span><span class="s1">y2</span><span class="s2">,</span><span class="s0">false</span><span class="s2">,</span><span class="s1">panel</span><span class="s2">);</span>
+                            <span class="s3">//</span>
+                            <span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">path </span><span class="s2">= </span><span class="s1">main</span><span class="s2">.</span><span class="s1">currentPath</span><span class="s2">;</span>
+
+                            <span class="s3">//</span>
+                            <span class="s1">panel</span><span class="s2">.</span><span class="s1">showPathAndClear</span><span class="s2">(</span><span class="s1">path</span><span class="s2">, </span><span class="s1">buttons</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">], </span><span class="s1">buttons</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">][</span><span class="s1">y2</span><span class="s2">],</span><span class="s1">tmpIconOrder</span><span class="s2">);</span>
+                            <span class="s0">if </span><span class="s2">(</span><span class="s1">main</span><span class="s2">.</span><span class="s1">isGameCleared</span><span class="s2">()) {</span>
+                                <span class="s0">if </span><span class="s2">(</span><span class="s1">victoryListener </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                                    <span class="s3">// 模拟触发一个 ActionEvent 传回给 GameFrame</span>
+                                    <span class="s1">victoryListener</span><span class="s2">.</span><span class="s1">actionPerformed</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ActionEvent</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">ActionEvent</span><span class="s2">.</span><span class="s1">ACTION_PERFORMED</span><span class="s2">, </span><span class="s5">&quot;VICTORY&quot;</span><span class="s2">));</span>
+                                <span class="s2">}</span>
+                            <span class="s2">}</span>
+                            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;消除成功，当前棋盘:&quot;</span><span class="s2">);</span>
+                            <span class="s1">main</span><span class="s2">.</span><span class="s1">controlPanelPrintln</span><span class="s2">();</span>
+
+                        <span class="s2">}</span>
+                        <span class="s0">else if</span><span class="s2">(</span><span class="s1">main</span><span class="s2">.</span><span class="s1">isValidConnection</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">, </span><span class="s1">y1</span><span class="s2">, </span><span class="s1">x2</span><span class="s2">, </span><span class="s1">y2</span><span class="s2">) &amp;&amp; </span><span class="s1">applygrav </span><span class="s2">== </span><span class="s0">true</span><span class="s2">){</span>
+                            <span class="s1">main</span><span class="s2">.</span><span class="s1">cellElimination</span><span class="s2">(</span><span class="s1">x1</span><span class="s2">,</span><span class="s1">y1</span><span class="s2">,</span><span class="s1">x2</span><span class="s2">,</span><span class="s1">y2</span><span class="s2">,</span><span class="s0">true</span><span class="s2">,</span><span class="s1">panel</span><span class="s2">);</span>
+                            <span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">path </span><span class="s2">= </span><span class="s1">main</span><span class="s2">.</span><span class="s1">currentPath</span><span class="s2">;</span>
+
+                            <span class="s3">//</span>
+
+                            <span class="s1">panel</span><span class="s2">.</span><span class="s1">showPathAndClear</span><span class="s2">(</span><span class="s1">path</span><span class="s2">, </span><span class="s1">buttons</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">], </span><span class="s1">buttons</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">][</span><span class="s1">y2</span><span class="s2">],</span><span class="s1">tmpIconOrder</span><span class="s2">);</span>
+                            <span class="s0">if </span><span class="s2">(</span><span class="s1">main</span><span class="s2">.</span><span class="s1">isGameCleared</span><span class="s2">()) {</span>
+                                <span class="s0">if </span><span class="s2">(</span><span class="s1">victoryListener </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                                    <span class="s3">// 模拟触发一个 ActionEvent 传回给 GameFrame</span>
+                                    <span class="s1">victoryListener</span><span class="s2">.</span><span class="s1">actionPerformed</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ActionEvent</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">ActionEvent</span><span class="s2">.</span><span class="s1">ACTION_PERFORMED</span><span class="s2">, </span><span class="s5">&quot;VICTORY&quot;</span><span class="s2">));</span>
+                                <span class="s2">}</span>
+                            <span class="s2">}</span>
+                            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;消除成功，当前棋盘:&quot;</span><span class="s2">);</span>
+                            <span class="s1">Timer timer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Timer</span><span class="s2">(</span><span class="s4">300</span><span class="s2">, </span><span class="s1">e -&gt; </span><span class="s2">{ </span><span class="s3">/* 0.3秒后执行的清除代码 */</span>
+                            <span class="s1">main</span><span class="s2">.</span><span class="s1">applyGravity</span><span class="s2">();</span>
+                            <span class="s1">main</span><span class="s2">.</span><span class="s1">controlPanelPrintln</span><span class="s2">();</span>
+
+                                <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">k </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">k </span><span class="s2">&lt; </span><span class="s1">buttons</span><span class="s2">.</span><span class="s1">length</span><span class="s2">; </span><span class="s1">k</span><span class="s2">++) {</span>
+                                    <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">l </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">l </span><span class="s2">&lt; </span><span class="s1">buttons</span><span class="s2">[</span><span class="s4">0</span><span class="s2">].</span><span class="s1">length</span><span class="s2">; </span><span class="s1">l</span><span class="s2">++) {</span>
+                                        <span class="s1">panel</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">buttons</span><span class="s2">[</span><span class="s1">k</span><span class="s2">][</span><span class="s1">l</span><span class="s2">]);</span>
+                                    <span class="s2">}</span>
+                                <span class="s2">}</span>
+
+                            <span class="s1">JButton</span><span class="s2">[][] </span><span class="s1">Buttons </span><span class="s2">= </span><span class="s1">cellArrays</span><span class="s2">(</span><span class="s1">main</span><span class="s2">.</span><span class="s1">getMap</span><span class="s2">());</span>
+                            <span class="s1">setCellsFunction</span><span class="s2">(</span><span class="s1">Buttons</span><span class="s2">, </span><span class="s1">main</span><span class="s2">, </span><span class="s1">panel</span><span class="s2">, </span><span class="s1">victoryListener</span><span class="s2">, </span><span class="s1">applygrav</span><span class="s2">);</span>
+                            <span class="s2">});</span>
+                            <span class="s1">timer</span><span class="s2">.</span><span class="s1">setRepeats</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+                            <span class="s1">timer</span><span class="s2">.</span><span class="s1">start</span><span class="s2">();</span>
+
+                        <span class="s2">}</span>
+                        <span class="s0">else </span><span class="s2">{</span>
+                            <span class="s1">buttons</span><span class="s2">[</span><span class="s1">x1</span><span class="s2">][</span><span class="s1">y1</span><span class="s2">].</span><span class="s1">setEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                            <span class="s1">buttons</span><span class="s2">[</span><span class="s1">x2</span><span class="s2">][</span><span class="s1">y2</span><span class="s2">].</span><span class="s1">setEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                        <span class="s2">}</span>
+                        <span class="s1">tmpX</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+                        <span class="s1">tmpY</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+                    <span class="s2">}</span>
+                <span class="s2">});</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">setLeftbound</span><span class="s2">(</span><span class="s0">int </span><span class="s1">leftbound</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">leftbound </span><span class="s2">= </span><span class="s1">leftbound</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setUpbound</span><span class="s2">(</span><span class="s0">int </span><span class="s1">upbound</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">upbound </span><span class="s2">= </span><span class="s1">upbound</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setEdgelength</span><span class="s2">(</span><span class="s0">int </span><span class="s1">edgelength</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">edgelength </span><span class="s2">= </span><span class="s1">edgelength</span><span class="s2">; }</span>
+    <span class="s0">public int </span><span class="s1">getEdgelength</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">edgelength</span><span class="s2">; }</span>
+    <span class="s0">public int </span><span class="s1">getUpbound</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">upbound</span><span class="s2">; }</span>
+    <span class="s0">public int </span><span class="s1">getLeftbound</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">leftbound</span><span class="s2">; }</span>
+    <span class="s0">public </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Point</span><span class="s2">&gt; </span><span class="s1">getlineToDraw</span><span class="s2">(){</span><span class="s0">return  </span><span class="s1">lineToDraw</span><span class="s2">;}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>PixelDialog_Yes_No.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+PixelDialog_Yes_No.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">ui</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">FontManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">utils</span><span class="s2">.</span><span class="s1">SoundManager</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+
+<span class="s0">public class </span><span class="s1">PixelDialog_Yes_No </span><span class="s2">{</span>
+    <span class="s0">public static boolean </span><span class="s1">showDialog</span><span class="s2">(</span><span class="s1">Component parent</span><span class="s2">, </span><span class="s1">String message</span><span class="s2">,<a href="Cell.java.html">Cell</a> </span><span class="s1">cells</span><span class="s2">) {</span>
+        <span class="s3">// 创建一个新的 JDialog 作为对话框</span>
+        <span class="s1">JDialog dialog </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JDialog</span><span class="s2">((</span><span class="s1">JFrame</span><span class="s2">) </span><span class="s1">parent</span><span class="s2">, </span><span class="s0">true</span><span class="s2">); </span><span class="s3">// true 表示这是一个模态对话框，会阻塞父窗口</span>
+        
+        <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setUndecorated</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span><span class="s3">// 去掉标题栏和边框</span>
+        <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setSize</span><span class="s2">(</span><span class="s4">400</span><span class="s2">, </span><span class="s4">200</span><span class="s2">);</span>
+        <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s1">parent</span><span class="s2">); </span><span class="s3">// 在父组件中心显示</span>
+        <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+
+        <a href="BackgroundPanel.java.html">BackgroundPanel</a> <span class="s1">bgPanel </span><span class="s2">= </span><span class="s0">new <a href="BackgroundPanel.java.html">BackgroundPanel</a></span><span class="s2">(</span><span class="s5">&quot;resource/images/dialog_bg.png&quot;</span><span class="s2">,</span><span class="s1">cells</span><span class="s2">);</span>
+        <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setContentPane</span><span class="s2">(</span><span class="s1">bgPanel</span><span class="s2">);</span>
+
+        <span class="s3">// 显示消息的 JLabel</span>
+        <span class="s1">JLabel messageLabel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s1">message</span><span class="s2">);</span>
+        <span class="s1">messageLabel</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontBody</span><span class="s2">);</span>
+        <span class="s1">messageLabel</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">messageLabel</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">50</span><span class="s2">, </span><span class="s4">30</span><span class="s2">, </span><span class="s4">300</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">messageLabel</span><span class="s2">);</span>
+
+        <span class="s3">// “是”按钮</span>
+        <span class="s1">JButton yesButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;是&quot;</span><span class="s2">);</span>
+        <span class="s1">ImageIcon yesIcon </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/dialog_btn.png&quot;</span><span class="s2">); </span>
+        <span class="s1">yesButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">yesButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">yesButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s1">yesIcon</span><span class="s2">);</span>
+        <span class="s1">yesButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">yesButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">yesButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">80</span><span class="s2">, </span><span class="s4">100</span><span class="s2">, </span><span class="s1">yesIcon</span><span class="s2">.</span><span class="s1">getIconWidth</span><span class="s2">(), </span><span class="s1">yesIcon</span><span class="s2">.</span><span class="s1">getIconHeight</span><span class="s2">());</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">yesButton</span><span class="s2">);</span>
+
+        <span class="s3">// “否”按钮</span>
+        <span class="s1">JButton noButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s5">&quot;否&quot;</span><span class="s2">);</span>
+        <span class="s1">ImageIcon noIcon </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageIcon</span><span class="s2">(</span><span class="s5">&quot;resource/images/dialog_btn.png&quot;</span><span class="s2">); </span>
+        <span class="s1">noButton</span><span class="s2">.</span><span class="s1">setIcon</span><span class="s2">(</span><span class="s1">noIcon</span><span class="s2">);</span>
+        <span class="s1">noButton</span><span class="s2">.</span><span class="s1">setHorizontalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">noButton</span><span class="s2">.</span><span class="s1">setVerticalTextPosition</span><span class="s2">(</span><span class="s1">JButton</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">noButton</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">FontManager</span><span class="s2">.</span><span class="s1">pixelFontSubTitle</span><span class="s2">);</span>
+        <span class="s1">noButton</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">noButton</span><span class="s2">.</span><span class="s1">setBounds</span><span class="s2">(</span><span class="s4">220</span><span class="s2">, </span><span class="s4">100</span><span class="s2">, </span><span class="s1">noIcon</span><span class="s2">.</span><span class="s1">getIconWidth</span><span class="s2">(), </span><span class="s1">noIcon</span><span class="s2">.</span><span class="s1">getIconHeight</span><span class="s2">());</span>
+        <span class="s1">bgPanel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">noButton</span><span class="s2">);</span>
+
+        <span class="s0">final boolean</span><span class="s2">[] </span><span class="s1">result </span><span class="s2">= {</span><span class="s0">false</span><span class="s2">};</span>
+
+        <span class="s1">yesButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+            <span class="s1">result</span><span class="s2">[</span><span class="s4">0</span><span class="s2">] = </span><span class="s0">true</span><span class="s2">; </span>
+            <span class="s1">dialog</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">(); </span>
+        <span class="s2">});</span>
+
+        <span class="s1">noButton</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">SoundManager</span><span class="s2">.</span><span class="s1">playSFX</span><span class="s2">(</span><span class="s5">&quot;confirm&quot;</span><span class="s2">);</span>
+            <span class="s1">result</span><span class="s2">[</span><span class="s4">0</span><span class="s2">] = </span><span class="s0">false</span><span class="s2">; </span>
+            <span class="s1">dialog</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">(); </span>
+        <span class="s2">});</span>
+
+        <span class="s1">dialog</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">); </span>
+
+        <span class="s0">return </span><span class="s1">result</span><span class="s2">[</span><span class="s4">0</span><span class="s2">]; </span><span class="s3">// 返回用户的选择</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
