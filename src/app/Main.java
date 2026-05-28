@@ -10,6 +10,7 @@ import utils.SoundManager;
 //test sentence
 //this is a test sentence aiming at testing the synchornization function of github to help collaborate
 //succeeded attempt to synchornize
+// now test updating local project file
 public class Main {
     public static void main(String[] args) {
         ChessBoard chessBoard = new ChessBoard(10,10,5, false);
