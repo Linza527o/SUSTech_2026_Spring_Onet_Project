@@ -8,14 +8,8 @@ import utils.SoundManager;
 //test sentence
 //test sentence
 //test sentence
-//test sentence
-//test sentence
-//test sentence
-//test sentence
-//test sentence
-
-
-//test sentence
+//this is a test sentence aiming at testing the synchornization function of github to help collaborate
+//succeeded attempt to synchornize
 public class Main {
     public static void main(String[] args) {
         ChessBoard chessBoard = new ChessBoard(10,10,5, false);
