@@ -5,7 +5,17 @@ import manager.AccountManager;
 import ui.*;
 import utils.FontManager;
 import utils.SoundManager;
+//test sentence
+//test sentence
+//test sentence
+//test sentence
+//test sentence
+//test sentence
+//test sentence
+//test sentence
 
+
+//test sentence
 public class Main {
     public static void main(String[] args) {
         ChessBoard chessBoard = new ChessBoard(10,10,5, false);
