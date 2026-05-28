@@ -254,6 +254,13 @@ public class GameFrame extends JFrame {
             timer.setSecondsPassed(currentTimeOverall);
         } else {
             mainBoard.gameSetting();
+
+            try{
+               manager.GameSaveManager.saveInitialState(currentUser.getAccount(), mainBoard.getMap(), currentScoreOverall, currentTimeOverall, applyGravity, type, mode); 
+               System.out.println("初始棋盘已保存！");
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
 
         // 【新增】在这里初始化加载剩余的对数！
@@ -304,8 +311,17 @@ public class GameFrame extends JFrame {
                 // 这里可以添加重置游戏状态的逻辑
                 // 目前只是简单地重新打开一个新的 GameFrame
                 SoundManager.playSFX("confirm");
-                new GameFrame(currentUser, false,applyGravity, mode).setVisible(true);
-
+                GameSaveManager.SaveData initData = gameSaveManager.loadInitialState(currentUser.getAccount(), type, mode);
+                if(initData != null){
+                    try{
+                        GameSaveManager.saveGame(currentUser.getAccount(), initData.map, initData.score, initData.timeLeft, applyGravity, type, mode);
+                    }catch(IOException ex){
+                        ex.printStackTrace();
+                    }
+                }else{
+                    GameSaveManager.deleteSave(currentUser.getAccount(),type,mode);
+                }
+                new GameFrame(currentUser, false, applyGravity, mode).setVisible(true);
                 dispose(); // 关闭当前游戏界面
             });
 
