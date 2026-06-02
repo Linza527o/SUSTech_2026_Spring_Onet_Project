@@ -210,7 +210,7 @@ public class GameFrame extends JFrame {
 
 
             timer.stopTimer();
-            manager.UserDataManager.saveProgress(currentUser, scoreThisGame, timeThisGame, mode, type);
+            manager.UserDataManager.saveProgress(currentUser, scoreThisGame, timeThisGame, mode, type,mainBoard.getVictoryStatus());
 
             gameSaveManager.deleteSave(currentUser.getAccount(),type,mode);
 

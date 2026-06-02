@@ -8,11 +8,13 @@ public class UserDataManager {
     private static final String FILE_PATH = "save/users.txt";
 
 
-    public static void saveProgress(AccountInfo user, int currentScore, int currentTime, int diff, int type) {
+    public static void saveProgress(AccountInfo user, int currentScore, int currentTime, int diff, int type,boolean state) {
         user.setBestScore(type, diff, currentScore);
+        if(state){
         user.setShortestTime(type, diff, currentTime);
         user.incrementClearedLevels(type, diff);
-        syncToFile(user);
+    }
+    syncToFile(user);
     }
 
     private static void syncToFile(AccountInfo updatedUser) {

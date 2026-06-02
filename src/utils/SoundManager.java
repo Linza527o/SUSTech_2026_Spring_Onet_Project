@@ -12,8 +12,8 @@ public class SoundManager {
     private static Clip bgmClip;
     
     // 全局音量变量 (0 到 100)
-    private static int bgmVolume = 80;
-    private static int sfxVolume = 30;
+    private static int bgmVolume = 50;
+    private static int sfxVolume = 0;
 
     private static Map<String, Clip> sfxCache = new HashMap<>(); // 可选：缓存已经加载过的音效，避免重复加载
 
@@ -29,6 +29,9 @@ public class SoundManager {
         loadSound("descend", "resource/music/descend.wav");
         loadSound("ascend", "resource/music/ascend.wav");
         loadSound("combo", "resource/music/combo.wav");
+        loadSound("button", "resource/music/ClickonButtons.wav");
+         loadSound("connect", "resource/music/connection.wav");
+         loadSound("808", "resource/music/808.wav");
     }
 
     public static void loadSound(String key, String filePath) {

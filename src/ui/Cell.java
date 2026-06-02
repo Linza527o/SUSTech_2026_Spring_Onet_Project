@@ -84,6 +84,7 @@ public class Cell {
                 final int finalJ = j;
 
                 buttons[i][j].addActionListener(ch -> {
+                    utils.SoundManager.playSFX("button");
                     buttons[finalI][finalJ].setEnabled(false);
                     tmpX.add(finalI);
                     tmpY.add(finalJ);
@@ -109,6 +110,7 @@ public class Cell {
                                     victoryListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "VICTORY"));
                                 }
                             }
+                            utils.SoundManager.playSFX("connect");
                             System.out.println("消除成功，当前棋盘:");
                             main.controlPanelPrintln();
 
@@ -117,6 +119,14 @@ public class Cell {
                         else if((main.isValidConnection(x1, y1, x2, y2,true) && applygrav)){
                             main.cellElimination(x1,y1,x2,y2,true,panel);
                             panel.updateRemainingDisplay(main.getRemainingPairs());
+                            Timer timer0 = new Timer(300, null);
+                            timer0.addActionListener(e ->{
+                                utils.SoundManager.playSFX("808");
+                            
+                            });
+                            timer0.setRepeats(false);
+                            timer0.start();
+                            
                             ArrayList<Point> path = main.currentPath;
 
                             //
