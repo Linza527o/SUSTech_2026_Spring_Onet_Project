@@ -13,7 +13,7 @@ public class SoundManager {
     
     // 全局音量变量 (0 到 100)
     private static int bgmVolume = 50;
-    private static int sfxVolume = 0;
+    private static int sfxVolume = 70;
 
     private static Map<String, Clip> sfxCache = new HashMap<>(); // 可选：缓存已经加载过的音效，避免重复加载
 
